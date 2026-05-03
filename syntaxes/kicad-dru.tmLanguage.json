@@ -89,8 +89,8 @@
       },
       "name": "meta.condition.kicad-dru",
       "patterns": [
-        { "include": "#expression-string-double" },
-        { "include": "#expression-string-single" }
+        { "include": "#expression-string-outer-double" },
+        { "include": "#expression-string-outer-single" }
       ]
     },
 
@@ -107,8 +107,8 @@
       },
       "name": "meta.constraint.assertion.kicad-dru",
       "patterns": [
-        { "include": "#expression-string-double" },
-        { "include": "#expression-string-single" }
+        { "include": "#expression-string-outer-double" },
+        { "include": "#expression-string-outer-single" }
       ]
     },
 
@@ -316,7 +316,7 @@
     "number-with-unit": {
       "patterns": [
         {
-          "match": "(?<![A-Za-z_])(-?(?:\\d+\\.\\d+|\\.\\d+|\\d+))(mm|mil|th|in|deg|rad|ps|ns|\")",
+          "match": "(?<![A-Za-z_])(-?(?:\\d+\\.\\d+|\\.\\d+|\\d+))(mm|mil|in|deg|fs|ps)\\b",
           "captures": {
             "1": { "name": "constant.numeric.kicad-dru" },
             "2": { "name": "keyword.other.unit.kicad-dru" }
@@ -344,7 +344,7 @@
       "name": "variable.other.kicad-dru"
     },
 
-    "expression-string-double": {
+    "expression-string-outer-double": {
       "begin": "\"",
       "beginCaptures": {
         "0": { "name": "punctuation.definition.string.begin.kicad-dru" }
@@ -356,11 +356,11 @@
       "name": "string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru",
       "contentName": "meta.embedded.expression.kicad-dru",
       "patterns": [
-        { "include": "#expression-body" }
+        { "include": "#expression-body-double-outer" }
       ]
     },
 
-    "expression-string-single": {
+    "expression-string-outer-single": {
       "begin": "'",
       "beginCaptures": {
         "0": { "name": "punctuation.definition.string.begin.kicad-dru" }
@@ -372,60 +372,90 @@
       "name": "string.quoted.single.kicad-dru meta.embedded.expression.kicad-dru",
       "contentName": "meta.embedded.expression.kicad-dru",
       "patterns": [
-        { "include": "#expression-body" }
+        { "include": "#expression-body-single-outer" }
       ]
     },
 
-    "expression-body": {
+    "expression-body-double-outer": {
       "patterns": [
-        { "include": "#expression-string-literal-single-inside-double" },
-        { "include": "#expression-string-literal-double-inside-single" },
+        { "include": "#expression-string-inner-single" },
+        { "include": "#expression-paren-double-outer" },
+        { "include": "#expression-non-string-patterns" }
+      ]
+    },
+
+    "expression-body-single-outer": {
+      "patterns": [
+        { "include": "#expression-string-inner-double" },
+        { "include": "#expression-paren-single-outer" },
+        { "include": "#expression-non-string-patterns" }
+      ]
+    },
+
+    "expression-non-string-patterns": {
+      "patterns": [
         { "include": "#expression-text-variable" },
         { "include": "#expression-function-call" },
         { "include": "#expression-accessor-property" },
         { "include": "#expression-accessor" },
+        { "include": "#expression-null-literal" },
         { "include": "#expression-operators-comparison" },
         { "include": "#expression-operators-logical" },
         { "include": "#expression-operators-arith" },
         { "include": "#expression-number-with-unit" },
-        { "include": "#expression-paren" },
         { "include": "#expression-identifier" }
       ]
     },
 
-    "expression-string-literal-single-inside-double": {
-      "begin": "(?<=\")(?=.*?')",
-      "end": "(?=\")",
+    "expression-string-inner-single": {
+      "begin": "'",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.kicad-dru" }
+      },
+      "end": "'",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.kicad-dru" }
+      },
+      "name": "string.quoted.single.kicad-dru"
+    },
+
+    "expression-string-inner-double": {
+      "begin": "\"",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.kicad-dru" }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.kicad-dru" }
+      },
+      "name": "string.quoted.double.kicad-dru"
+    },
+
+    "expression-paren-double-outer": {
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.parens.begin.kicad-dru" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.parens.end.kicad-dru" }
+      },
       "patterns": [
-        {
-          "begin": "'",
-          "beginCaptures": {
-            "0": { "name": "punctuation.definition.string.begin.kicad-dru" }
-          },
-          "end": "'",
-          "endCaptures": {
-            "0": { "name": "punctuation.definition.string.end.kicad-dru" }
-          },
-          "name": "string.quoted.single.kicad-dru"
-        }
+        { "include": "#expression-body-double-outer" }
       ]
     },
 
-    "expression-string-literal-double-inside-single": {
-      "begin": "(?<=')(?=.*?\")",
-      "end": "(?=')",
+    "expression-paren-single-outer": {
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.parens.begin.kicad-dru" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.parens.end.kicad-dru" }
+      },
       "patterns": [
-        {
-          "begin": "\"",
-          "beginCaptures": {
-            "0": { "name": "punctuation.definition.string.begin.kicad-dru" }
-          },
-          "end": "\"",
-          "endCaptures": {
-            "0": { "name": "punctuation.definition.string.end.kicad-dru" }
-          },
-          "name": "string.quoted.double.kicad-dru"
-        }
+        { "include": "#expression-body-single-outer" }
       ]
     },
 
@@ -435,12 +465,12 @@
     },
 
     "expression-function-call": {
-      "match": "\\b(enclosedByArea|existsOnLayer|fromTo|getField|hasComponentClass|hasExactNetclass|hasNetclass|inDiffPair|insideArea|insideCourtyard|insideFrontCourtyard|insideBackCourtyard|intersectsArea|intersectsCourtyard|intersectsFrontCourtyard|intersectsBackCourtyard|isBlindBuriedVia|isBlindVia|isBuriedVia|isCoupledDiffPair|isMicroVia|isPlated|memberOfFootprint|memberOfGroup|memberOfSheetOrChildren|memberOfSheet|memberOf)(?=\\s*\\()",
+      "match": "(?i)\\b(enclosedByArea|existsOnLayer|fromTo|getField|hasComponentClass|hasExactNetclass|hasNetclass|inDiffPair|insideArea|insideCourtyard|insideFrontCourtyard|insideBackCourtyard|intersectsArea|intersectsCourtyard|intersectsFrontCourtyard|intersectsBackCourtyard|isBlindBuriedVia|isBlindVia|isBuriedVia|isCoupledDiffPair|isMicroVia|isPlated|memberOfFootprint|memberOfGroup|memberOfSheetOrChildren|memberOfSheet|memberOf)(?=\\s*\\()",
       "name": "support.function.kicad-dru"
     },
 
     "expression-accessor-property": {
-      "match": "(\\b[AB]\\b|\\bAB\\b)(\\.)([A-Za-z_][A-Za-z0-9_\\-]*)",
+      "match": "(\\bAB\\b|\\b[ABL]\\b)(\\.)([A-Za-z_][A-Za-z0-9_\\-%]*)",
       "captures": {
         "1": { "name": "variable.language.accessor.kicad-dru" },
         "2": { "name": "punctuation.accessor.kicad-dru" },
@@ -449,8 +479,13 @@
     },
 
     "expression-accessor": {
-      "match": "\\b(AB|A|B)\\b",
+      "match": "\\b(AB|A|B|L)\\b",
       "name": "variable.language.accessor.kicad-dru"
+    },
+
+    "expression-null-literal": {
+      "match": "\\bnull\\b",
+      "name": "constant.language.null.kicad-dru"
     },
 
     "expression-operators-comparison": {
@@ -471,7 +506,7 @@
     "expression-number-with-unit": {
       "patterns": [
         {
-          "match": "(?<![A-Za-z_])(-?(?:\\d+\\.\\d+|\\.\\d+|\\d+))(mm|mil|th|in|deg|rad|ps|ns)\\b",
+          "match": "(?<![A-Za-z_])(-?(?:\\d+\\.\\d+|\\.\\d+|\\d+))(mm|mil|in|deg|fs|ps)\\b",
           "captures": {
             "1": { "name": "constant.numeric.kicad-dru" },
             "2": { "name": "keyword.other.unit.kicad-dru" }
@@ -481,20 +516,6 @@
           "match": "(?<![A-Za-z_])-?(?:\\d+\\.\\d+|\\.\\d+|\\d+)\\b",
           "name": "constant.numeric.kicad-dru"
         }
-      ]
-    },
-
-    "expression-paren": {
-      "begin": "\\(",
-      "beginCaptures": {
-        "0": { "name": "punctuation.section.parens.begin.kicad-dru" }
-      },
-      "end": "\\)",
-      "endCaptures": {
-        "0": { "name": "punctuation.section.parens.end.kicad-dru" }
-      },
-      "patterns": [
-        { "include": "#expression-body" }
       ]
     },
 
