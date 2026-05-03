@@ -1,0 +1,300 @@
+{
+  "version header": {
+    "prefix": "version",
+    "body": ["(version 1)"],
+    "description": "DRU file version header. Required as the first form in every .kicad_dru file."
+  },
+
+  "rule (minimal)": {
+    "prefix": "rule",
+    "body": [
+      "(rule \"${1:rule_name}\"",
+      "    (constraint ${2|clearance,track_width,hole_clearance,hole_to_hole,via_diameter,length|} (min ${3:0.2mm})))",
+      "$0"
+    ],
+    "description": "Minimal rule with a name and one constraint."
+  },
+
+  "rule with condition": {
+    "prefix": "rule-cond",
+    "body": [
+      "(rule \"${1:rule_name}\"",
+      "    (condition \"${2:A.NetClass == 'HV'}\")",
+      "    (constraint ${3|clearance,track_width,length,via_diameter|} (min ${4:0.2mm})))",
+      "$0"
+    ],
+    "description": "Rule with a condition string and a single constraint."
+  },
+
+  "clearance constraint": {
+    "prefix": "clearance",
+    "body": ["(constraint clearance (min ${1:0.2mm}))$0"],
+    "description": "Electrical clearance between copper objects on different nets."
+  },
+
+  "clearance by netclass": {
+    "prefix": "clearance-netclass",
+    "body": [
+      "(rule \"${1:HV}\"",
+      "    (condition \"A.NetClass == '${2:HV}'\")",
+      "    (constraint clearance (min ${3:1.5mm})))",
+      "$0"
+    ],
+    "description": "Clearance for nets in a specific net class. Pattern from KiCad docs §HV example."
+  },
+
+  "track_width constraint": {
+    "prefix": "track_width",
+    "body": ["(constraint track_width (min ${1:0.15mm}) (opt ${2:0.2mm}) (max ${3:0.5mm}))$0"],
+    "description": "Track / arc-segment width. opt is the interactive router default."
+  },
+
+  "via_diameter constraint": {
+    "prefix": "via_diameter",
+    "body": ["(constraint via_diameter (min ${1:0.4mm}))$0"],
+    "description": "Outer diameter of via pad. Available KiCad 7+."
+  },
+
+  "hole_size constraint": {
+    "prefix": "hole_size",
+    "body": ["(constraint hole_size (min ${1:0.3mm}) (opt ${2:0.4mm}))$0"],
+    "description": "Drill diameter. min ↔ minor axis, max ↔ major axis on oval slots."
+  },
+
+  "hole_to_hole constraint": {
+    "prefix": "hole_to_hole",
+    "body": ["(constraint hole_to_hole (min ${1:0.5mm}))$0"],
+    "description": "Mechanically drilled holes only. Excludes laser/microvia and milled slots."
+  },
+
+  "edge_clearance constraint": {
+    "prefix": "edge_clearance",
+    "body": ["(constraint edge_clearance (min ${1:0.5mm}))$0"],
+    "description": "Clearance to anything on Edge.Cuts plus oval pad holes."
+  },
+
+  "courtyard_clearance constraint": {
+    "prefix": "courtyard_clearance",
+    "body": ["(constraint courtyard_clearance (min ${1:0.2mm}))$0"],
+    "description": "Spacing between footprint courtyards. min < 0 allows overlap."
+  },
+
+  "length constraint (min/max)": {
+    "prefix": "length",
+    "body": ["(constraint length (min ${1:10mm}) (max ${2:50mm}))$0"],
+    "description": "Net total routed length. Length values; time-domain units (ps/ns) supported on master."
+  },
+
+  "skew constraint": {
+    "prefix": "skew",
+    "body": ["(constraint skew (max ${1:0.2mm}))$0"],
+    "description": "Length-skew across matched nets. Add (within_diff_pairs) to scope per pair."
+  },
+
+  "skew within diff pairs": {
+    "prefix": "skew-diffpair",
+    "body": ["(constraint skew (max ${1:0.2mm}) (within_diff_pairs))$0"],
+    "description": "Skew evaluated within each diff pair rather than across the whole match set."
+  },
+
+  "diff_pair_gap": {
+    "prefix": "diff_pair_gap",
+    "body": ["(constraint diff_pair_gap (min ${1:0.13mm}) (opt ${2:0.15mm}))$0"],
+    "description": "Gap between parallel diff-pair tracks. opt is the interactive router default."
+  },
+
+  "diff_pair_uncoupled": {
+    "prefix": "diff_pair_uncoupled",
+    "body": ["(constraint diff_pair_uncoupled (max ${1:5mm}))$0"],
+    "description": "Maximum length a diff pair may run uncoupled."
+  },
+
+  "via_count constraint": {
+    "prefix": "via_count",
+    "body": ["(constraint via_count (max ${1:4}))$0"],
+    "description": "Max vias per matching net. min added in v8."
+  },
+
+  "annular_width constraint": {
+    "prefix": "annular_width",
+    "body": ["(constraint annular_width (min ${1:0.15mm}))$0"],
+    "description": "Annular ring around vias and pads (pads added in v8)."
+  },
+
+  "thermal_relief_gap": {
+    "prefix": "thermal_relief_gap",
+    "body": ["(constraint thermal_relief_gap (min ${1:0.25mm}))$0"],
+    "description": "Gap between pad and zone for thermal-relief connections."
+  },
+
+  "thermal_spoke_width": {
+    "prefix": "thermal_spoke_width",
+    "body": ["(constraint thermal_spoke_width (opt ${1:0.5mm}))$0"],
+    "description": "Width of thermal-relief spokes."
+  },
+
+  "min_resolved_spokes": {
+    "prefix": "min_resolved_spokes",
+    "body": ["(constraint min_resolved_spokes ${1|2,1,3,4|})$0"],
+    "description": "Minimum number of thermal-relief spokes that must actually be drawn (0–4)."
+  },
+
+  "zone_connection": {
+    "prefix": "zone_connection",
+    "body": ["(constraint zone_connection ${1|thermal_reliefs,solid,none|})$0"],
+    "description": "Forces zone-to-pad connection style."
+  },
+
+  "physical_clearance": {
+    "prefix": "physical_clearance",
+    "body": ["(constraint physical_clearance (min ${1:0.5mm}))$0"],
+    "description": "Non-net-aware clearance between copper, paste, silk, mask, courtyard, edge."
+  },
+
+  "physical_hole_clearance": {
+    "prefix": "physical_hole_clearance",
+    "body": ["(constraint physical_hole_clearance (min ${1:0.25mm}))$0"],
+    "description": "Drilling tolerance: round holes vs anything regardless of net."
+  },
+
+  "creepage": {
+    "prefix": "creepage",
+    "body": ["(constraint creepage (min ${1:1.5mm}))$0"],
+    "description": "Surface-distance creepage between different-net copper. KiCad 9+."
+  },
+
+  "silk_clearance": {
+    "prefix": "silk_clearance",
+    "body": ["(constraint silk_clearance (min ${1:0.15mm}))$0"],
+    "description": "Silk-vs-other-objects clearance. min < 0 allows overlap."
+  },
+
+  "text_height": {
+    "prefix": "text_height",
+    "body": ["(constraint text_height (min ${1:1.0mm}) (max ${2:5.0mm}))$0"],
+    "description": "Text height check (incl. text boxes)."
+  },
+
+  "text_thickness": {
+    "prefix": "text_thickness",
+    "body": ["(constraint text_thickness (min ${1:0.15mm}))$0"],
+    "description": "Stroke thickness of text."
+  },
+
+  "track_angle": {
+    "prefix": "track_angle",
+    "body": ["(constraint track_angle (min ${1:90deg}))$0"],
+    "description": "Bend angle between adjacent track segments. KiCad 9+."
+  },
+
+  "track_segment_length": {
+    "prefix": "track_segment_length",
+    "body": ["(constraint track_segment_length (min ${1:0.5mm}))$0"],
+    "description": "Per-segment track / arc length. KiCad 9+."
+  },
+
+  "via_dangling": {
+    "prefix": "via_dangling",
+    "body": [
+      "(rule \"${1:no_dangling_vias}\"",
+      "    (constraint via_dangling)",
+      "    (severity warning))",
+      "$0"
+    ],
+    "description": "Flag vias that are unconnected or land on only one layer. KiCad 9+."
+  },
+
+  "solder_mask_expansion": {
+    "prefix": "solder_mask_expansion",
+    "body": ["(constraint solder_mask_expansion (opt ${1:0.05mm}))$0"],
+    "description": "Mask expansion for pads/shapes/tracks. KiCad 8+."
+  },
+
+  "solder_paste_abs_margin": {
+    "prefix": "solder_paste_abs_margin",
+    "body": ["(constraint solder_paste_abs_margin (opt ${1:-0.05mm}))$0"],
+    "description": "Absolute paste margin. KiCad 8+."
+  },
+
+  "solder_paste_rel_margin": {
+    "prefix": "solder_paste_rel_margin",
+    "body": ["(constraint solder_paste_rel_margin (opt ${1:-0.1}))$0"],
+    "description": "Relative paste margin (unitless ratio). KiCad 8+."
+  },
+
+  "connection_width": {
+    "prefix": "connection_width",
+    "body": ["(constraint connection_width (min ${1:0.2mm}))$0"],
+    "description": "Minimum width of copper connection between a pad and a zone fill. KiCad 7+."
+  },
+
+  "disallow constraint": {
+    "prefix": "disallow",
+    "body": ["(constraint disallow ${1|track,via,through_via,blind_via,buried_via,micro_via,pad,zone,text,graphic,hole,footprint|})$0"],
+    "description": "Forbid the listed object type(s) where the condition matches."
+  },
+
+  "disallow keepout (track via zone)": {
+    "prefix": "disallow-keepout",
+    "body": [
+      "(rule \"${1:keepout}\"",
+      "    (constraint disallow track via zone)",
+      "    (condition \"A.intersectsArea('${2:zone_name}')\"))",
+      "$0"
+    ],
+    "description": "Copper keepout pattern from KiCad docs."
+  },
+
+  "assertion constraint": {
+    "prefix": "assertion",
+    "body": [
+      "(rule \"${1:assertion_name}\"",
+      "    (constraint assertion \"${2:A.Soldermask_Margin_Override == 0mm}\")",
+      "    (condition \"${3:A.Type == 'Pad'}\"))",
+      "$0"
+    ],
+    "description": "DRC violation if the assertion expression evaluates to false."
+  },
+
+  "condition (NetClass equality)": {
+    "prefix": "cond-netclass",
+    "body": ["(condition \"A.NetClass == '${1:HV}'\")$0"],
+    "description": "Match objects in the named net class."
+  },
+
+  "condition (intersectsArea)": {
+    "prefix": "cond-area",
+    "body": ["(condition \"A.intersectsArea('${1:zone_name}')\")$0"],
+    "description": "Match objects overlapping the named rule area / zone."
+  },
+
+  "condition (fromTo)": {
+    "prefix": "cond-fromto",
+    "body": ["(condition \"A.fromTo('${1:U1-A1}', '${2:U2-B1}')\")$0"],
+    "description": "Match the signal path between named pads. RefDes-Pin form, wildcards allowed."
+  },
+
+  "condition (intersectsCourtyard)": {
+    "prefix": "cond-courtyard",
+    "body": ["(condition \"A.intersectsCourtyard('${1:U1}')\")$0"],
+    "description": "Match objects overlapping a footprint's courtyard."
+  },
+
+  "condition (Type equality)": {
+    "prefix": "cond-type",
+    "body": ["(condition \"A.Type == '${1|Pad,Track,Via,Zone,Footprint,Graphic,Text,Text Box,Group,Bitmap,Dimension,Leader,Target|}'\")$0"],
+    "description": "Match objects of a specific Type."
+  },
+
+  "layer clause": {
+    "prefix": "layer",
+    "body": ["(layer ${1|F.Cu,B.Cu,outer,inner,Edge.Cuts,F.Mask,B.Mask,F.SilkS,B.SilkS,F.Courtyard,B.Courtyard|})$0"],
+    "description": "Restrict the rule to a single layer or a layer-set shortcut."
+  },
+
+  "severity": {
+    "prefix": "severity",
+    "body": ["(severity ${1|warning,error,ignore,exclusion|})$0"],
+    "description": "Override DRC reporting severity for this rule's violations."
+  }
+}

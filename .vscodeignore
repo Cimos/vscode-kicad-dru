@@ -1,0 +1,22 @@
+# Files excluded from the published .vsix.
+# Anything not listed here is included.
+
+.vscode/**
+.vscode-test/**
+.github/**
+.claude/**
+agent-context/**
+tests/**
+
+.gitignore
+.gitattributes
+
+vsc-extension-quickstart.md
+**/*.map
+**/*.ts
+**/tsconfig.json
+**/.eslintrc*
+**/eslint.config.*
+
+node_modules/**
+*.vsix

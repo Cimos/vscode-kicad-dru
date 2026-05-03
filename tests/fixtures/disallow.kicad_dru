@@ -1,0 +1,13 @@
+(version 1)
+
+(rule "no vias on top"
+    (constraint disallow track via micro_via)
+    (layer F.Cu))
+
+(rule "no through vias"
+    (constraint disallow through_via blind_via buried_via)
+    (condition "A.intersectsArea('NoThrough')"))
+
+(rule "text-free zone"
+    (constraint disallow text graphic footprint pad zone hole)
+    (condition "A.intersectsArea('clear_strip')"))

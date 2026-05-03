@@ -1,0 +1,19 @@
+(version 1)
+
+#   indented comment line
+   #   another indented comment line
+
+(rule	"tabs and spaces"
+	(layer	F.Cu)
+	(constraint	clearance	(min	0.15mm)))
+
+
+  (rule "leading-spaces"
+        (constraint hole_to_hole (min 0.5mm)))
+
+(rule
+    "split across lines"
+    (constraint
+        track_width
+        (min 0.2mm)
+        (opt 0.25mm)))

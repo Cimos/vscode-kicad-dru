@@ -1,0 +1,60 @@
+{
+  "name": "kicad-dru",
+  "displayName": "KiCad Custom Design Rules",
+  "description": "Syntax highlighting and snippets for KiCad Custom Design Rules (.kicad_dru) files.",
+  "version": "0.0.1",
+  "publisher": "cimos",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cimos/vscode-kicad-dru.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Cimos/vscode-kicad-dru/issues"
+  },
+  "homepage": "https://github.com/Cimos/vscode-kicad-dru#readme",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "kicad",
+    "kicad_dru",
+    "design rules",
+    "drc",
+    "pcb",
+    "eda",
+    "s-expression"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "kicad-dru",
+        "aliases": [
+          "KiCad Custom Design Rules",
+          "kicad-dru"
+        ],
+        "extensions": [
+          ".kicad_dru"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "kicad-dru",
+        "scopeName": "source.kicad-dru",
+        "path": "./syntaxes/kicad-dru.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "kicad-dru",
+        "path": "./snippets/kicad-dru.json"
+      }
+    ]
+  }
+}

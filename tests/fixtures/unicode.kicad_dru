@@ -1,0 +1,10 @@
+(version 1)
+
+# Net names and rule names containing non-ASCII characters
+(rule "Höhe-Spannung"
+    (condition "A.NetClass == 'Höchstspannung'")
+    (constraint clearance (min 2.5mm)))
+
+(rule "信号"
+    (condition "A.NetName == '電源_5V'")
+    (constraint track_width (min 0.4mm)))

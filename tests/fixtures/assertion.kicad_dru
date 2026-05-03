@@ -1,0 +1,11 @@
+(version 1)
+
+# Disallow solder mask margin overrides on pads
+(rule "disallow solder mask margin overrides"
+    (constraint assertion "A.Soldermask_Margin_Override == 0mm")
+    (condition "A.Type == 'Pad'"))
+
+# Make sure no via has a 1mm hole
+(rule "no oversized via holes"
+    (constraint assertion "A.Hole < 1mm")
+    (condition "A.Type == 'Via'"))

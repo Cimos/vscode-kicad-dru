@@ -1,0 +1,12 @@
+(version 1)
+
+# Disallow tracks, vias, zones inside the named keepout area
+(rule "copper keepout"
+    (constraint disallow track via zone)
+    (condition "A.intersectsArea('zone3')"))
+
+# Tighter clearance under a BGA courtyard
+(rule "BGA neckdown"
+    (constraint track_width (min 0.2mm) (opt 0.25mm))
+    (constraint clearance (min 0.05mm) (opt 0.08mm))
+    (condition "A.intersectsCourtyard('U3')"))

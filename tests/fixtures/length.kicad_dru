@@ -1,0 +1,16 @@
+(version 1)
+
+# Match data signal lengths from memory controller to DRAM
+(rule "DDR_DQ0 length"
+    (condition "A.fromTo('U1-A1', 'U2-B1')")
+    (constraint length (max 50mm)))
+
+# Constrain skew across all DQ paths
+(rule "DDR_DQ skew"
+    (condition "A.fromTo('U1-A*', 'U2-B*')")
+    (constraint skew (max 0.2mm)))
+
+# Skew evaluated within each diff pair
+(rule "diff pair skew"
+    (constraint skew (max 0.05mm) (within_diff_pairs))
+    (condition "A.inDiffPair('USB')"))

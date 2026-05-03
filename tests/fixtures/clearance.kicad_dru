@@ -1,0 +1,11 @@
+(version 1)
+
+# Larger clearance on outer layers
+(rule "clearance_outer"
+    (layer outer)
+    (constraint clearance (min 0.25mm)))
+
+# Default minimum clearance for the F.Cu layer
+(rule front_clearance
+    (layer F.Cu)
+    (constraint clearance (min 0.15mm)))

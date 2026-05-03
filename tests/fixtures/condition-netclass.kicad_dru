@@ -1,0 +1,11 @@
+(version 1)
+
+# Clearance for HV nets to anything else
+(rule HV
+    (condition "A.hasNetclass('HV')")
+    (constraint clearance (min 1.5mm)))
+
+# Different net class on each side: extra clearance
+(rule "interclass clearance"
+    (condition "A.NetClass != B.NetClass")
+    (constraint clearance (min 0.3mm)))

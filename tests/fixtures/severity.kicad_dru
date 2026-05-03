@@ -1,0 +1,22 @@
+(version 1)
+
+# Allow connector silk to intersect the board edge
+(rule "Allow connector silk to intersect board edge"
+    (constraint silk_clearance)
+    (severity ignore)
+    (condition "A.memberOfFootprint('J*') && B.Layer=='Edge.Cuts'"))
+
+# Demote courtyard overlap to a warning, not an error
+(rule "soft courtyard"
+    (constraint courtyard_clearance (min 0mm))
+    (severity warning))
+
+(rule "exempt example"
+    (constraint clearance (min 0.05mm))
+    (severity exclusion)
+    (condition "A.memberOfFootprint('U999')"))
+
+(rule "explicit error"
+    (constraint clearance (min 0.4mm))
+    (severity error)
+    (condition "A.NetClass == 'HV'"))

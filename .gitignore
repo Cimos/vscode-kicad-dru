@@ -1,0 +1,14 @@
+# VS Code extension build output
+*.vsix
+.vscode-test/
+
+# Agent-context overlay (bootstrapped, source of truth lives elsewhere)
+.claude/
+
+# Node
+node_modules/
+npm-debug.log
+
+# OS
+.DS_Store
+Thumbs.db
