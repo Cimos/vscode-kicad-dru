@@ -13,3 +13,10 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
   via and track sizing, hole-to-hole, assertion).
 - Language configuration: `#` line comments, paren matching, paren-based
   folding, auto-closing pairs.
+- Snippets target KiCad 9 stable. Master-only constraints
+  (`solder_mask_expansion`, `solder_mask_sliver`,
+  `solder_paste_abs_margin`, `solder_paste_rel_margin`, `via_dangling`,
+  `bridged_mask`) are still highlighted by the grammar but are not in the
+  snippet set — they would be rejected by KiCad 9's *Check Rule Syntax*.
+  The `through_via` and `blind_via` disallow keywords are likewise
+  master-only.

@@ -1,6 +1,9 @@
 (version 1)
 
 # Torture test — exercise as many DRU shapes as possible.
+# Targeted at KiCad 9 stable; everything in this file should pass
+# *Check Rule Syntax* on a stock KiCad 9 install. Master-only constraints
+# live in master-only.kicad_dru.
 
 # 1. Layer-shortcut + simple constraint
 (rule "outer_clearance"
@@ -29,10 +32,10 @@
     (constraint clearance (min 0.05mm) (opt 0.08mm))
     (condition "A.intersectsCourtyard('U3')"))
 
-# 6. Disallow with mixed via subtypes
-(rule "no through or blind vias here"
-    (constraint disallow through_via blind_via)
-    (condition "A.intersectsArea('NoThrough')"))
+# 6. Disallow — v9-compatible (only the 10 v9 keywords)
+(rule "no vias or buried vias here"
+    (constraint disallow via buried_via)
+    (condition "A.intersectsArea('NoVias')"))
 
 # 7. Length with from-to
 (rule "DDR_DQ0 length"
@@ -65,22 +68,22 @@
     (constraint min_resolved_spokes 2)
     (condition "A.NetClass == 'PWR'"))
 
-# 13. Track angle / segment
+# 13. Track angle / segment (KiCad 9+). track_angle is unit-less in
+# the parser — bare number, interpreted in degrees.
 (rule "no acute bends"
-    (constraint track_angle (min 90deg)))
+    (constraint track_angle (min 90)))
 
 (rule "min segment length"
     (constraint track_segment_length (min 0.5mm)))
 
-# 14. Via dangling (no args)
-(rule "flag dangling vias"
-    (constraint via_dangling)
-    (severity warning))
+# 14. Creepage (KiCad 9+)
+(rule "HV creepage"
+    (constraint creepage (min 1.5mm))
+    (condition "A.NetClass == 'HV'"))
 
-# 15. Solder paste / mask
-(rule "BGA paste shrink"
-    (constraint solder_paste_rel_margin (opt -0.05))
-    (condition "A.intersectsCourtyard('U3')"))
+# 15. Connection width (KiCad 7+)
+(rule "min connection width"
+    (constraint connection_width (min 0.2mm)))
 
 # 16. Arithmetic in constraint value
 (rule "clearance-with-arith"

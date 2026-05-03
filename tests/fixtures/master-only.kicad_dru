@@ -1,0 +1,41 @@
+(version 1)
+
+# Master-only / KiCad 10+ constraints.
+# These will FAIL *Check Rule Syntax* on KiCad 9 stable.
+# Source: kicad-dru-language.md §3 audit — solder_mask_*, solder_paste_*,
+# via_dangling, bridged_mask, and the through_via / blind_via disallow
+# keywords were added in master after the 9.0 branch was cut.
+
+# Disallow — through_via and blind_via are master-only keywords
+(rule "no through-hole or blind vias"
+    (constraint disallow through_via blind_via)
+    (condition "A.intersectsArea('NoThrough')"))
+
+# via_dangling — flag vias that don't connect or land on only one layer
+(rule "flag dangling vias"
+    (constraint via_dangling)
+    (severity warning))
+
+# solder_mask_expansion — opt mask expansion for pads/shapes/tracks
+(rule "default mask expansion"
+    (constraint solder_mask_expansion (opt 0.05mm)))
+
+# solder_mask_sliver — minimum sliver width on the soldermask
+(rule "no thin mask slivers"
+    (constraint solder_mask_sliver (min 0.05mm)))
+
+# solder_paste_abs_margin — absolute paste margin
+(rule "BGA paste pull-back (absolute)"
+    (constraint solder_paste_abs_margin (opt -0.05mm))
+    (condition "A.intersectsCourtyard('U3')"))
+
+# solder_paste_rel_margin — relative paste margin (unitless ratio)
+(rule "BGA paste pull-back (relative)"
+    (constraint solder_paste_rel_margin (opt -0.1))
+    (condition "A.intersectsCourtyard('U4')"))
+
+# bridged_mask — solder-mask bridging between copper, severity-controlled
+(rule "allow mask bridges between SOIC pads"
+    (constraint bridged_mask)
+    (severity ignore)
+    (condition "A.memberOfFootprint('U10')"))

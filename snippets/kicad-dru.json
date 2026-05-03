@@ -135,7 +135,7 @@
 
   "min_resolved_spokes": {
     "prefix": "min_resolved_spokes",
-    "body": ["(constraint min_resolved_spokes ${1|2,1,3,4|})$0"],
+    "body": ["(constraint min_resolved_spokes ${1|2,0,1,3,4|})$0"],
     "description": "Minimum number of thermal-relief spokes that must actually be drawn (0–4)."
   },
 
@@ -183,43 +183,14 @@
 
   "track_angle": {
     "prefix": "track_angle",
-    "body": ["(constraint track_angle (min ${1:90deg}))$0"],
-    "description": "Bend angle between adjacent track segments. KiCad 9+."
+    "body": ["(constraint track_angle (min ${1:90}))$0"],
+    "description": "Bend angle between adjacent track segments, bare number in degrees (track_angle is unit-less in the parser; suffixing `deg` produces a parse error). KiCad 9+."
   },
 
   "track_segment_length": {
     "prefix": "track_segment_length",
     "body": ["(constraint track_segment_length (min ${1:0.5mm}))$0"],
     "description": "Per-segment track / arc length. KiCad 9+."
-  },
-
-  "via_dangling": {
-    "prefix": "via_dangling",
-    "body": [
-      "(rule \"${1:no_dangling_vias}\"",
-      "    (constraint via_dangling)",
-      "    (severity warning))",
-      "$0"
-    ],
-    "description": "Flag vias that are unconnected or land on only one layer. KiCad 9+."
-  },
-
-  "solder_mask_expansion": {
-    "prefix": "solder_mask_expansion",
-    "body": ["(constraint solder_mask_expansion (opt ${1:0.05mm}))$0"],
-    "description": "Mask expansion for pads/shapes/tracks. KiCad 8+."
-  },
-
-  "solder_paste_abs_margin": {
-    "prefix": "solder_paste_abs_margin",
-    "body": ["(constraint solder_paste_abs_margin (opt ${1:-0.05mm}))$0"],
-    "description": "Absolute paste margin. KiCad 8+."
-  },
-
-  "solder_paste_rel_margin": {
-    "prefix": "solder_paste_rel_margin",
-    "body": ["(constraint solder_paste_rel_margin (opt ${1:-0.1}))$0"],
-    "description": "Relative paste margin (unitless ratio). KiCad 8+."
   },
 
   "connection_width": {
