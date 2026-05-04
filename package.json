@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "publisher": "cimos",
   "license": "MIT",
-  "icon": "images/D1.png",
+  "icon": "images/D1_256.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Cimos/vscode-kicad-dru.git"
