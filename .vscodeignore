@@ -7,6 +7,8 @@
 .claude/**
 agent-context/**
 tests/**
+CLAUDE.md
+AGENTS.md
 
 .gitignore
 .gitattributes
