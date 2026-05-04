@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/D1_256.png" alt="KiCad Custom Design Rules" width="128" height="128">
+</p>
+
 # KiCad Custom Design Rules — VS Code extension
 
 Syntax highlighting and snippets for KiCad **Custom Design Rule** files
