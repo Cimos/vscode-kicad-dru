@@ -1,0 +1,749 @@
+>(version 1)
+#^ source.kicad-dru meta.version.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^^^^ source.kicad-dru meta.version.kicad-dru keyword.control.version.kicad-dru
+#        ^ source.kicad-dru meta.version.kicad-dru
+#         ^ source.kicad-dru meta.version.kicad-dru constant.numeric.integer.kicad-dru
+#          ^ source.kicad-dru meta.version.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># Torture test — exercise as many DRU shapes as possible.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># Targeted at KiCad 9 stable; everything in this file should pass
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># *Check Rule Syntax* on a stock KiCad 9 install. Master-only constraints
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># live in master-only.kicad_dru.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>
+># 1. Layer-shortcut + simple constraint
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "outer_clearance"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (layer outer)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru keyword.control.layer.kicad-dru
+#          ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru
+#           ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru constant.language.layer-shortcut.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (constraint clearance (min 0.25mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                           ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                               ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                   ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 2. Inner-layer shortcut
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "inner_clearance"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (layer inner)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru keyword.control.layer.kicad-dru
+#          ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru
+#           ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru constant.language.layer-shortcut.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (constraint clearance (min 0.15mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                           ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                               ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                   ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 3. Named layer
+#^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule front_mechanical_board_edge_clearance
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (layer "F.Courtyard")
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru keyword.control.layer.kicad-dru
+#          ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru
+#           ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru string.quoted.double.kicad-dru punctuation.definition.string.begin.kicad-dru
+#            ^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru string.quoted.double.kicad-dru
+#                       ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru string.quoted.double.kicad-dru punctuation.definition.string.end.kicad-dru
+#                        ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (constraint physical_clearance (min 3mm))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                    ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                        ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                         ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "B.Layer == 'Edge.Cuts'"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                       ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                        ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                           ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                            ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                        ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 4. Net-class condition + clearance
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule HV
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (condition "A.hasNetclass('HV')")
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                             ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                               ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (constraint clearance (min 1.5mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                           ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                               ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                  ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 5. Multiple constraints in one rule (BGA neckdown)
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "BGA neckdown"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint track_width (min 0.2mm) (opt 0.25mm))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                             ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                 ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                    ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                                        ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                         ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                             ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                                 ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                                   ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (constraint clearance (min 0.05mm) (opt 0.08mm))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                           ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                               ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                   ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                        ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                            ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                                ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                                  ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                   ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.intersectsCourtyard('U3')"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                                       ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                           ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                            ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                             ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 6. Disallow — v9-compatible (only the 10 v9 keywords)
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "no vias or buried vias here"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint disallow via buried_via)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru
+#                ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru support.type.constraint.kicad-dru
+#                        ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru
+#                         ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru constant.language.disallow-category.kicad-dru
+#                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru
+#                             ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru constant.language.disallow-category.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.intersectsArea('NoVias')"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                                  ^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                        ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                           ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                            ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 7. Length with from-to
+#^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "DDR_DQ0 length"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (condition "A.fromTo('U1-A1', 'U2-B1')")
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                        ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                          ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                                   ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                        ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                           ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (constraint length (max 50mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                      ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                       ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                        ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                            ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                              ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 8. Skew within diff pair
+#^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "USB skew"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint skew (max 0.05mm) (within_diff_pairs))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                      ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                          ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                              ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.flag.within-diff-pairs.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                   ^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.flag.within-diff-pairs.kicad-dru keyword.other.flag.kicad-dru
+#                                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.flag.within-diff-pairs.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.inDiffPair('USB')"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                            ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                             ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                              ^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 9. Assertion with property comparison
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "no soldermask overrides"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint assertion "A.Soldermask_Margin_Override == 0mm")
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru
+#                ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru support.type.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                                                       ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                                                        ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                                                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                                                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru constant.numeric.kicad-dru
+#                                                            ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.other.unit.kicad-dru
+#                                                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                                               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.assertion.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.Type == 'Pad'"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                      ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                       ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                           ^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 10. Severity override
+#^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "Allow connector silk on edge"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint silk_clearance)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (severity ignore)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.severity.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.severity.kicad-dru keyword.control.severity.kicad-dru
+#             ^ source.kicad-dru meta.rule.kicad-dru meta.severity.kicad-dru
+#              ^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.severity.kicad-dru constant.language.severity.kicad-dru
+#                    ^ source.kicad-dru meta.rule.kicad-dru meta.severity.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.memberOfFootprint('J*') && B.Layer=='Edge.Cuts'"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                                     ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                       ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                        ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                                          ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.logical.kicad-dru
+#                                            ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                                             ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                                              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                                               ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                                                    ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                                                      ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                                                       ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                                                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                                                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                                                  ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                                   ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 11. Zone connection forced
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "thermal-only on power pads"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint zone_connection thermal_reliefs)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.zone-connection.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.zone-connection.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.zone-connection.kicad-dru
+#                ^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.zone-connection.kicad-dru support.type.constraint.kicad-dru
+#                               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.zone-connection.kicad-dru
+#                                ^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.zone-connection.kicad-dru constant.language.zone-connection.kicad-dru
+#                                               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.zone-connection.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.NetClass == 'PWR'"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                           ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                             ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                               ^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 12. Min resolved spokes
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "spoke count"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint min_resolved_spokes 2)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.min-resolved-spokes.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.min-resolved-spokes.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.min-resolved-spokes.kicad-dru
+#                ^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.min-resolved-spokes.kicad-dru support.type.constraint.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.min-resolved-spokes.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.min-resolved-spokes.kicad-dru constant.numeric.integer.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.min-resolved-spokes.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.NetClass == 'PWR'"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                           ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                             ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                               ^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 13. Track angle / segment (KiCad 9+). track_angle is unit-less in
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># the parser — bare number, interpreted in degrees.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "no acute bends"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint track_angle (min 90)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                             ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                 ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+>(rule "min segment length"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint track_segment_length (min 0.5mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                      ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                          ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                             ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                 ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 14. Creepage (KiCad 9+)
+#^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "HV creepage"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint creepage (min 1.5mm))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                        ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                          ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                             ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                              ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                 ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.NetClass == 'HV'"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                           ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                             ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                               ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                  ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 15. Connection width (KiCad 7+)
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "min connection width"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint connection_width (min 0.2mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                                ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                                 ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                  ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                      ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                         ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                           ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                             ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 16. Arithmetic in constraint value
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "clearance-with-arith"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint clearance (min 0.5mm + 0.1mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                           ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                               ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                  ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.operator.arithmetic.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                                       ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                          ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                            ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                             ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                              ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 17. Deprecated constraint — should colour as deprecated
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "old-style"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint mechanical_clearance (min 0.5mm)))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru
+#                ^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru invalid.deprecated.constraint.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                      ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru meta.bound.kicad-dru
+#                                          ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                             ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.deprecated.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                 ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 18. Quoted enum value with literal space
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "no text boxes here"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint disallow text)
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru
+#                ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru support.type.constraint.kicad-dru
+#                        ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru
+#                         ^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru constant.language.disallow-category.kicad-dru
+#                             ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.disallow.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.Type == 'Text Box'"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                      ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                       ^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru keyword.operator.comparison.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                           ^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                      ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
+># 19. Text-variable arg pattern (special-cased — not preprocessed)
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+>(rule "memberOfFootprint by class"
+#^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
+# ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru
+#     ^ source.kicad-dru meta.rule.kicad-dru
+#      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru entity.name.section.rule.kicad-dru
+>    (constraint clearance (min 0.4mm))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru keyword.control.constraint.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru support.type.constraint.kicad-dru
+#                         ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru
+#                          ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                           ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.bound.kicad-dru
+#                              ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru
+#                               ^^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru constant.numeric.kicad-dru
+#                                  ^^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru keyword.other.unit.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru meta.bound.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                     ^ source.kicad-dru meta.rule.kicad-dru meta.constraint.kicad-dru punctuation.section.parens.end.kicad-dru
+>    (condition "A.memberOfFootprint('${Class:HighCurrent}')"))
+#^^^^ source.kicad-dru meta.rule.kicad-dru
+#    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.begin.kicad-dru
+#     ^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru keyword.control.condition.kicad-dru
+#              ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru
+#               ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru variable.language.accessor.kicad-dru
+#                 ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.accessor.kicad-dru
+#                  ^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru support.variable.property.kicad-dru
+#                                   ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.begin.kicad-dru
+#                                    ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.begin.kicad-dru
+#                                     ^^^^^^^^^^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru
+#                                                         ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru string.quoted.single.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                                          ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru meta.embedded.expression.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                           ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru string.quoted.double.kicad-dru meta.embedded.expression.kicad-dru punctuation.definition.string.end.kicad-dru
+#                                                            ^ source.kicad-dru meta.rule.kicad-dru meta.condition.kicad-dru punctuation.section.parens.end.kicad-dru
+#                                                             ^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.end.kicad-dru
+>
