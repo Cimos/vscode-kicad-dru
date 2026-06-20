@@ -9,6 +9,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Least privilege: the only write this job needs is creating/attaching the
+    # GitHub release. Marketplace / Open VSX auth is via PATs, not GITHUB_TOKEN.
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +40,7 @@ jobs:
           path: vscode-kicad-dru.vsix
 
       - name: Publish to VS Code Marketplace
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') && env.VSCE_PAT != ''
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: npx --yes @vscode/vsce publish --packagePath vscode-kicad-dru.vsix --pat "$VSCE_PAT"
@@ -49,6 +53,9 @@ jobs:
 
       - name: Attach .vsix to GitHub release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+        # SHA-pinned (supply-chain hygiene): third-party action pinned to the
+        # exact commit behind the v2 tag. A v3 line exists — bump deliberately
+        # after reviewing its changelog, not implicitly via a moving tag.
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: vscode-kicad-dru.vsix
