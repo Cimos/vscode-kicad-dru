@@ -1,0 +1,21 @@
+(version 1)
+
+# KiCad 10 net-chain / high-speed constraints and functions.
+# Grammar-only coverage: these are highlighted but not (yet) in the snippet set
+# pending confirmation against the exact 10.0.0 tag.
+
+(rule "net-chain length budget"
+    (condition "A.inNetChain('DDR_CMD')")
+    (constraint net_chain_length (min 10mm) (max 25mm)))
+
+(rule "net-chain time budget"
+    (condition "A.hasNetChain()")
+    (constraint net_chain_length (max 150ps)))
+
+(rule "stub length limit"
+    (condition "A.inNetChainClass('HS')")
+    (constraint stub_length (max 0.5mm)))
+
+(rule "return path"
+    (condition "A.NetClass == 'HS'")
+    (constraint return_path (layer "B.Cu") (net "GND")))
