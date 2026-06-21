@@ -92,10 +92,14 @@ test('partial property after "A." sets replace range over the partial', () => {
   assert.equal(e.replace.end - e.replace.start, 3, 'replaces the 3-char "Net" partial');
 });
 
-test('outside any expression body returns []', () => {
+test('outside any expression body, non-structural positions return []', () => {
+  // mid-identifier inside `(rule <name>` is not a structural slot
   assert.deepEqual(complete('(rule my_rule|'), []);
+  // empty buffer
   assert.deepEqual(complete('|'), []);
-  assert.deepEqual(complete('(constraint clearance|'), []);
+  // NOTE: `(constraint clearance|` is now the constraint-type slot (a partial
+  // type being typed) and intentionally offers structural completion — see
+  // structural.test.mjs. It is no longer an empty-result case.
 });
 
 test('inside an inner \'...\' literal returns []', () => {

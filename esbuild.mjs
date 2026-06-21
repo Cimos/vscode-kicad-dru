@@ -32,10 +32,24 @@ const pureOpts = {
   logLevel: 'info',
 };
 
+// Pure-logic ESM build of the hover engine, same rationale as `pureOpts`: it
+// lets `node --test` import `dist/hover.mjs` without the vscode extension host.
+// esbuild bundles src/completion.ts transitively (hover.ts imports its helpers).
+const hoverOpts = {
+  ...pureOpts,
+  entryPoints: ['src/hover.ts'],
+  outfile: 'dist/hover.mjs',
+};
+
 if (watch) {
   const c1 = await esbuild.context(extensionOpts);
   const c2 = await esbuild.context(pureOpts);
-  await Promise.all([c1.watch(), c2.watch()]);
+  const c3 = await esbuild.context(hoverOpts);
+  await Promise.all([c1.watch(), c2.watch(), c3.watch()]);
 } else {
-  await Promise.all([esbuild.build(extensionOpts), esbuild.build(pureOpts)]);
+  await Promise.all([
+    esbuild.build(extensionOpts),
+    esbuild.build(pureOpts),
+    esbuild.build(hoverOpts),
+  ]);
 }

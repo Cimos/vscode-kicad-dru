@@ -13,9 +13,9 @@ esbuild.mjs
 CLAUDE.md
 AGENTS.md
 
-# Test-only ESM build of the pure completion engine (consumed by node --test).
-# The shipped runtime is dist/extension.js; this bundle is not needed in the .vsix.
-dist/completion.mjs
+# Test-only ESM builds of the pure modules (consumed by node --test).
+# The shipped runtime is dist/extension.js; these bundles aren't needed in the .vsix.
+dist/*.mjs
 
 .gitignore
 .gitattributes

@@ -6,14 +6,20 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-- IntelliSense completion inside `(condition "…")` and `(constraint
+- IntelliSense completion. Inside `(condition "…")` / `(constraint
   assertion "…")` strings: receiver members after `A.`/`B.`/`AB.`, and
-  receivers + functions at an identifier boundary, each with type/units and
-  a short doc. The extension is now activated (`onLanguage:kicad-dru`) and
-  bundled with esbuild; completion data comes from a single `data/api.json`
-  stamped with the KiCad version and audit date. Completion logic is a pure
-  function covered by unit tests (`npm run test:unit`); these run as part of
-  `npm test`.
+  receivers + functions at an identifier boundary. While writing rule
+  structure: constraint types after `(constraint `, layer names after
+  `(layer `, severities after `(severity `, categories after `(constraint
+  disallow `, and the structural keywords. Each item carries type/units or
+  argument shape and a short doc.
+- Hover help: hover a constraint type, property, function, layer, severity,
+  or disallow category for its description and argument/type.
+- The extension is now activated (`onLanguage:kicad-dru`) and esbuild-bundled.
+  Completion and hover read a single `data/api.json` stamped with the KiCad
+  version and audit date. The completion/hover logic lives in pure,
+  vscode-free modules covered by unit tests (`npm run test:unit`, part of
+  `npm test`).
 - Distinct function highlighting and the publish-workflow PAT-guard fix (from
   the prior review) ship together with the above.
 
