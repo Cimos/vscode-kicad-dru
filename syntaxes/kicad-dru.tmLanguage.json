@@ -434,7 +434,7 @@
     "expression-non-string-patterns": {
       "patterns": [
         { "include": "#expression-text-variable" },
-        { "include": "#expression-function-call" },
+        { "include": "#expression-accessor-function" },
         { "include": "#expression-accessor-property" },
         { "include": "#expression-accessor" },
         { "include": "#expression-null-literal" },
@@ -503,9 +503,14 @@
       "name": "variable.other.text-variable.kicad-dru"
     },
 
-    "expression-function-call": {
-      "match": "(?i)\\b(enclosedByArea|existsOnLayer|fromTo|getField|hasComponentClass|hasExactNetclass|hasNetChain|hasNetclass|inDiffPair|inNetChainClass|inNetChain|insideArea|insideCourtyard|insideFrontCourtyard|insideBackCourtyard|intersectsArea|intersectsCourtyard|intersectsFrontCourtyard|intersectsBackCourtyard|isBlindBuriedVia|isBlindVia|isBuriedVia|isCoupledDiffPair|isMicroVia|isPlated|memberOfFootprint|memberOfGroup|memberOfSheetOrChildren|memberOfSheet|memberOf)(?=\\s*\\()",
-      "name": "support.function.kicad-dru"
+    "expression-accessor-function": {
+      "comment": "Receiver-bound function call, e.g. A.intersectsArea('x'). Matched before the property rule so a call gets support.function rather than support.variable.property. Any identifier after the accessor followed by '(' is treated as a method.",
+      "match": "(\\bAB\\b|\\b[ABL]\\b)(\\.)([A-Za-z_][A-Za-z0-9_]*)(?=\\s*\\()",
+      "captures": {
+        "1": { "name": "variable.language.accessor.kicad-dru" },
+        "2": { "name": "punctuation.accessor.kicad-dru" },
+        "3": { "name": "support.function.kicad-dru" }
+      }
     },
 
     "expression-accessor-property": {
