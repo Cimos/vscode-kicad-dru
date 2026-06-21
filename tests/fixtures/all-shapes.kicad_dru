@@ -1,9 +1,10 @@
 (version 1)
 
 # Torture test — exercise as many DRU shapes as possible.
-# Targeted at KiCad 9 stable; everything in this file should pass
-# *Check Rule Syntax* on a stock KiCad 9 install. Master-only constraints
-# live in master-only.kicad_dru.
+# Targeted at KiCad 10 stable; everything in this file should pass
+# *Check Rule Syntax* on a stock KiCad 10 install. KiCad-10 "extras" (the
+# former master-only set) live in kicad10-extras.kicad_dru; KiCad 11 /
+# master-only constructs live in kicad11-master-netchain.kicad_dru.
 
 # 1. Layer-shortcut + simple constraint
 (rule "outer_clearance"
