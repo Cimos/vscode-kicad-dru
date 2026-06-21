@@ -262,8 +262,32 @@
           "name": "constant.language.layer-shortcut.kicad-dru"
         },
         { "include": "#layer-keyword" },
-        { "include": "#string-double" },
-        { "include": "#string-single" }
+        { "include": "#layer-quoted-double" },
+        { "include": "#layer-quoted-single" }
+      ]
+    },
+
+    "layer-quoted-double": {
+      "comment": "Quoted layer name in a (layer ...) clause. Still a string, but a known canonical layer token inside is highlighted as a layer — KiCad accepts quoted layer names.",
+      "begin": "\"",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.kicad-dru" } },
+      "end": "\"",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.kicad-dru" } },
+      "name": "string.quoted.double.kicad-dru",
+      "patterns": [
+        { "include": "#layer-keyword" }
+      ]
+    },
+
+    "layer-quoted-single": {
+      "comment": "Single-quoted variant of #layer-quoted-double.",
+      "begin": "'",
+      "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.kicad-dru" } },
+      "end": "'",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.kicad-dru" } },
+      "name": "string.quoted.single.kicad-dru",
+      "patterns": [
+        { "include": "#layer-keyword" }
       ]
     },
 
