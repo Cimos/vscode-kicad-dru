@@ -39,17 +39,30 @@ jobs:
           name: vsix
           path: vscode-kicad-dru.vsix
 
+      # Step-level env (least privilege) isn't visible to a step's own `if`,
+      # so the secret-present check lives in the shell, where it is. Skips
+      # cleanly when the PAT is absent; publishes when it's set.
       - name: Publish to VS Code Marketplace
-        if: startsWith(github.ref, 'refs/tags/v') && env.VSCE_PAT != ''
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: npx --yes @vscode/vsce publish --packagePath vscode-kicad-dru.vsix --pat "$VSCE_PAT"
+        run: |
+          if [ -z "$VSCE_PAT" ]; then
+            echo "VSCE_PAT not set — skipping Marketplace publish."
+            exit 0
+          fi
+          npx --yes @vscode/vsce publish --packagePath vscode-kicad-dru.vsix --pat "$VSCE_PAT"
 
       - name: Publish to Open VSX
-        if: startsWith(github.ref, 'refs/tags/v') && env.OVSX_PAT != ''
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
-        run: npx --yes ovsx publish vscode-kicad-dru.vsix -p "$OVSX_PAT"
+        run: |
+          if [ -z "$OVSX_PAT" ]; then
+            echo "OVSX_PAT not set — skipping Open VSX publish."
+            exit 0
+          fi
+          npx --yes ovsx publish vscode-kicad-dru.vsix -p "$OVSX_PAT"
 
       - name: Attach .vsix to GitHub release
         if: startsWith(github.ref, 'refs/tags/v')
