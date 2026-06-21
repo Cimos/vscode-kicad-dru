@@ -107,6 +107,51 @@ test('inside an inner \'...\' literal returns []', () => {
   assert.deepEqual(complete("(condition \"A.Layer == 'F|'\");"), []);
 });
 
+// ---- value-literal completion (inside an inner '...' in known contexts) ----
+
+test("after A.Type == ' offers Type enum values", () => {
+  const entries = complete("(condition \"A.Type == '|\");");
+  const ls = labels(entries);
+  for (const v of ['Pad', 'Track', 'Via', 'Zone', 'Footprint']) {
+    assert.ok(ls.includes(v), `Type value ${v} offered`);
+  }
+  assert.ok(
+    entries.every((e) => e.kind === 'value'),
+    'every entry is kind=value',
+  );
+});
+
+test('Type-value completion offers the full set (vscode filters by partial)', () => {
+  const ls = labels(complete("(condition \"A.Type == 'V|\");"));
+  // the engine returns the full set; membership is what we assert.
+  assert.ok(ls.includes('Via'), 'Via offered');
+  assert.ok(ls.includes('Pad'), 'Pad still in the set (vscode filters)');
+});
+
+test('A.Type != also offers Type values', () => {
+  const ls = labels(complete("(condition \"A.Type != '|\");"));
+  assert.ok(ls.includes('Track'), 'Type values offered for != too');
+});
+
+test('existsOnLayer arg offers layer names (excludes outer/inner)', () => {
+  const ls = labels(complete("(condition \"A.existsOnLayer('|')\");"));
+  assert.ok(ls.includes('F.Cu'), 'F.Cu offered');
+  assert.ok(ls.includes('Edge.Cuts'), 'Edge.Cuts offered');
+  assert.ok(!ls.includes('outer'), 'outer layer-set shortcut excluded');
+  assert.ok(!ls.includes('inner'), 'inner layer-set shortcut excluded');
+});
+
+test('value completion replace range covers the typed partial', () => {
+  const entries = complete("(condition \"A.Type == 'Pa|'\");");
+  assert.ok(entries.length > 0, 'value entries offered');
+  // 'Pa' is a 2-char partial inside the quotes
+  assert.equal(entries[0].replace.end - entries[0].replace.start, 2);
+});
+
+test('non-layer fn arg offers nothing (scope discipline)', () => {
+  assert.deepEqual(complete("(condition \"A.intersectsArea('|')\");"), []);
+});
+
 test('constraint assertion body is also a completion context', () => {
   const ls = labels(complete('(constraint assertion "A.|");'));
   assert.ok(ls.includes('Layer'), 'assertion body offers properties');

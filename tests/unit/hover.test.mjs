@@ -98,12 +98,62 @@ test('hovering a bare receiver inside a condition returns the receiver doc', () 
   assert.match(r.contents, /receiver/i);
 });
 
-// ---- misses (null) ----
+// ---- units (glued to a numeric literal) ----
 
-test('hovering an operator returns null', () => {
-  const r = hover('(condition "A.Layer =|= \'F.Cu\'")');
-  assert.equal(r, null, 'operator == has no hover');
+test('hovering a unit suffix returns the unit doc', () => {
+  const r = hover('  (constraint clearance (min 0.2m|m))');
+  assert.ok(r, 'hover result for mm');
+  assert.match(r.contents, /millimetre/i);
+  assert.match(r.contents, /unit/, 'detail line says unit');
 });
+
+test('hovering a deg unit inside a condition', () => {
+  const r = hover('(condition "A.Orientation > 90de|g")');
+  assert.ok(r, 'hover result for deg');
+  assert.match(r.contents, /degree/i);
+});
+
+test('a bare in/ps word not after a digit is not a unit', () => {
+  // `in` inside a '...' literal: the inner-literal suppression still wins.
+  const r = hover('(condition "A.Type == \'P|in\'")');
+  assert.equal(r, null, 'identifier-like word in a literal is not a unit hover');
+});
+
+// ---- operators (inside an expression body) ----
+
+test('hovering == operator returns the operator name', () => {
+  const r = hover('(condition "A.Layer =|= \'F.Cu\'")');
+  assert.ok(r, 'hover result for ==');
+  assert.match(r.contents, /equal to/i);
+});
+
+test('hovering && operator returns logical AND', () => {
+  const r = hover('(condition "A.Locked &|& B.Locked")');
+  assert.ok(r, 'hover result for &&');
+  assert.match(r.contents, /logical AND/i);
+});
+
+test('hovering + outside a condition returns null', () => {
+  const r = hover('  (constraint clearance (min 0.2mm)) +|');
+  assert.equal(r, null, 'operators only document inside expression bodies');
+});
+
+// ---- bound keywords min/opt/max (structural, inside a constraint body) ----
+
+test('hovering min bound returns bound doc', () => {
+  const r = hover('  (constraint clearance (mi|n 0.2mm))');
+  assert.ok(r, 'hover result for min');
+  assert.match(r.contents, /bound/i);
+  assert.match(r.contents, /clearance/);
+});
+
+test('hovering opt bound returns bound doc', () => {
+  const r = hover('  (constraint track_width (op|t 0.2mm))');
+  assert.ok(r, 'hover result for opt');
+  assert.match(r.contents, /bound/i);
+});
+
+// ---- misses (null) ----
 
 test('hovering inside an inner \'...\' literal returns null', () => {
   const r = hover('(condition "A.Layer == \'F.|Cu\'")');

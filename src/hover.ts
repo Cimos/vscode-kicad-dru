@@ -24,7 +24,26 @@ import {
   expressionBodyOpenQuote,
   insideInnerLiteral,
   openRuleDepth,
+  enclosingConstraintAtParen,
 } from './completion';
+
+// ---- operator name table (language-fixed; no data dependency) ---------------
+
+const OPERATOR_NAMES: Record<string, [string, string]> = {
+  '==': ['equal to', 'Comparison: true when both sides are equal.'],
+  '!=': ['not equal to', 'Comparison: true when the sides differ.'],
+  '<': ['less than', 'Comparison.'],
+  '>': ['greater than', 'Comparison.'],
+  '<=': ['less than or equal to', 'Comparison.'],
+  '>=': ['greater than or equal to', 'Comparison.'],
+  '&&': ['logical AND', 'True when both operands are true.'],
+  '||': ['logical OR', 'True when either operand is true.'],
+  '!': ['logical NOT', 'Negates the following boolean.'],
+  '+': ['addition', 'Arithmetic.'],
+  '-': ['subtraction', 'Arithmetic (or unary negation).'],
+  '*': ['multiplication', 'Arithmetic.'],
+  '/': ['division', 'Arithmetic.'],
+};
 
 // ---- public types ----------------------------------------------------------
 
@@ -81,7 +100,10 @@ export function computeHover(
   // their `.`; property names may carry `%`/`-`). Operators are recognised so
   // we can deliberately return null on them. The span that contains `pos`
   // wins; a cursor exactly at a token's right edge counts as inside it.
-  const TOKEN_RE = /[A-Za-z_][A-Za-z0-9_.%\-]*|==|!=|<=|>=|&&|\|\||[<>!+\-*/]/g;
+  // Property-name class intentionally excludes '-': a glued "A.X-2" must not
+  // absorb the '-' (it would shadow operator hover, and a hyphenated property
+  // is lexer-unreachable anyway). The '-' is still recognised as an operator.
+  const TOKEN_RE = /[A-Za-z_][A-Za-z0-9_.%]*|==|!=|<=|>=|&&|\|\||[<>!+\-*/]/g;
   let token: string | null = null;
   let start = -1;
   let end = -1;
@@ -100,6 +122,18 @@ export function computeHover(
   if (token === null) return null;
 
   const range = { start, end };
+
+  // Unit suffix glued to a numeric literal: `0.2mm`, `5deg`, `100ps`. These
+  // appear both in constraint bodies (`(min 0.2mm)`) and inside expression
+  // bodies (`A.Width > 0.2mm`); resolve context-free. The left-of-`start` char
+  // being a digit/`.` is the discriminator that stops a bare identifier reading
+  // `in`/`ps`/`fs` from shadowing.
+  const leftCh = start > 0 ? lineText[start - 1] : '';
+  if (/[0-9.]/.test(leftCh) && (data.unitDocs ?? []).some((u) => u.name === token)) {
+    const u = (data.unitDocs ?? []).find((u) => u.name === token)!;
+    return { contents: renderHover(token, 'unit', u.doc), range };
+  }
+
   const inExpr = expressionBodyOpenQuote(lineText, pos) !== -1;
 
   if (inExpr) {
@@ -122,6 +156,13 @@ function hoverInExpression(
   // names) — symmetric with the completion gate.
   const bodyOpen = expressionBodyOpenQuote(lineText, pos);
   if (bodyOpen !== -1 && insideInnerLiteral(lineText, bodyOpen, pos)) return null;
+
+  // Operators are meaningful only inside an expression body (conditions /
+  // assertions); document them from the static table.
+  if (OPERATOR_NAMES[token]) {
+    const [name, doc] = OPERATOR_NAMES[token];
+    return { contents: renderHover(token, name, doc), range };
+  }
 
   // A dotted accessor member `<recv>.<name>`: if the cursor is over the member
   // part, resolve it as a property or function. The token regex captured the
@@ -200,7 +241,9 @@ function receiverHover(data: ApiData, token: string): string | null {
       ? 'Layer receiver — used in `(layer ...)` style comparisons; has no members.'
       : token === 'AB'
         ? 'Both items A and B (e.g. `AB.isCoupledDiffPair()`); same member set as `A`.'
-        : `Receiver for item ${token} in the current rule context.`;
+        : token === 'B'
+          ? 'The second item in a two-item rule context (e.g. the other side of a `clearance` check); same member set as `A`.'
+          : `Receiver for item ${token} in the current rule context.`;
   return renderHover(token, token === 'L' ? 'layer receiver' : 'item receiver', doc);
 }
 
@@ -269,6 +312,31 @@ function hoverStructural(
   if (/\(\s*layer\b/.test(head)) {
     const hit = findVocab(data.layers, token);
     if (hit) return vocabResult(hit, 'layer', range);
+  }
+
+  // bound keywords min/opt/max: a bound word sitting right after an inner `(`
+  // whose enclosing form is a constraint, e.g. `(constraint clearance (min| ...`.
+  if (
+    (token === 'min' || token === 'opt' || token === 'max') &&
+    /\(\s*$/.test(head)
+  ) {
+    const ct = enclosingConstraintAtParen(head);
+    if (ct) {
+      const which =
+        token === 'min'
+          ? 'minimum'
+          : token === 'max'
+            ? 'maximum'
+            : 'optimal/interactive-router default';
+      return {
+        contents: renderHover(
+          token,
+          'bound',
+          `\`${token}\` bound for the \`${ct}\` constraint — ${which} value.`,
+        ),
+        range,
+      };
+    }
   }
 
   // Context-free membership fallbacks (token documented wherever it appears).

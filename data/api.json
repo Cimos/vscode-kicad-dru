@@ -4,6 +4,29 @@
   "generatedAt": "2026-06-21",
   "receivers": ["A", "B", "AB", "L"],
   "units": ["mil", "mm", "in", "deg", "fs", "ps"],
+  "unitDocs": [
+    { "name": "mm",  "doc": "Millimetres — length unit." },
+    { "name": "mil", "doc": "Mils (thousandths of an inch, 0.0254 mm) — length unit." },
+    { "name": "in",  "doc": "Inches — length unit." },
+    { "name": "deg", "doc": "Degrees — angle unit." },
+    { "name": "fs",  "doc": "Femtoseconds — time-domain unit (length-equivalent on master)." },
+    { "name": "ps",  "doc": "Picoseconds — time-domain unit (length-equivalent on master)." }
+  ],
+  "typeValues": [
+    { "name": "Pad",       "doc": "Footprint pad." },
+    { "name": "Track",     "doc": "Copper track or arc segment." },
+    { "name": "Via",       "doc": "Plated via." },
+    { "name": "Zone",      "doc": "Copper zone / rule area." },
+    { "name": "Footprint", "doc": "Footprint." },
+    { "name": "Text",      "doc": "Text item." },
+    { "name": "Text Box",  "doc": "Text box." },
+    { "name": "Graphic",   "doc": "Graphic shape (line, arc, polygon, circle)." },
+    { "name": "Dimension", "doc": "Dimension item." },
+    { "name": "Group",     "doc": "Group." },
+    { "name": "Target",    "doc": "PCB target / fiducial." },
+    { "name": "Bitmap",    "doc": "Bitmap / reference image." },
+    { "name": "Leader",    "doc": "Leader (dimension callout)." }
+  ],
   "properties": [
     { "name": "Parent", "receivers": ["A", "B"], "type": "string", "reachable": true, "doc": "Read-only; parent item's UUID as a string." },
     { "name": "Position_X", "receivers": ["A", "B"], "type": "int", "units": "IU", "reachable": true, "doc": "X coordinate of the item's position." },
@@ -325,8 +348,6 @@
     { "name": "B.CrtYd", "doc": "Back courtyard layer." },
     { "name": "F.Fab", "doc": "Front fabrication layer." },
     { "name": "B.Fab", "doc": "Back fabrication layer." },
-    { "name": "F.Courtyard", "doc": "Front courtyard layer (long-form alias of F.CrtYd)." },
-    { "name": "B.Courtyard", "doc": "Back courtyard layer (long-form alias of B.CrtYd)." },
     { "name": "Margin", "doc": "Board margin layer." },
     { "name": "Dwgs.User", "doc": "User drawings layer." },
     { "name": "Cmts.User", "doc": "User comments layer." },

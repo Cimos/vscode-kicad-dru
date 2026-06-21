@@ -16,6 +16,20 @@
 #          ^^^^^^^^^ constant.language.layer.kicad-dru
     (layer F.Mask)
 #          ^^^^^^ constant.language.layer.kicad-dru
+    (layer F.CrtYd)
+#          ^^^^^^^ constant.language.layer.kicad-dru
+    (layer B.CrtYd)
+#          ^^^^^^^ constant.language.layer.kicad-dru
+    (layer User.1)
+#          ^^^^^^ constant.language.layer.kicad-dru
+    (layer User.9)
+#          ^^^^^^ constant.language.layer.kicad-dru
+    (layer User.10)
+#          ^^^^^^^ constant.language.layer.kicad-dru
+    (layer User.39)
+#          ^^^^^^^ constant.language.layer.kicad-dru
+    (layer User.45)
+#          ^^^^^^^ constant.language.layer.kicad-dru
     (layer outer)
 #          ^^^^^ constant.language.layer-shortcut.kicad-dru
     (layer inner))

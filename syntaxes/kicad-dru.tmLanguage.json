@@ -393,7 +393,7 @@
     },
 
     "layer-keyword": {
-      "match": "\\b(F\\.Cu|B\\.Cu|In(?:[1-9]|[12][0-9]|30)\\.Cu|F\\.Adhes|B\\.Adhes|F\\.Paste|B\\.Paste|F\\.SilkS|B\\.SilkS|F\\.Mask|B\\.Mask|F\\.CrtYd|B\\.CrtYd|F\\.Fab|B\\.Fab|F\\.Courtyard|B\\.Courtyard|Edge\\.Cuts|Margin|Dwgs\\.User|Cmts\\.User|Eco1\\.User|Eco2\\.User|User\\.[1-9])\\b",
+      "match": "\\b(F\\.Cu|B\\.Cu|In(?:[1-9]|[12][0-9]|30)\\.Cu|F\\.Adhes|B\\.Adhes|F\\.Paste|B\\.Paste|F\\.SilkS|B\\.SilkS|F\\.Mask|B\\.Mask|F\\.CrtYd|B\\.CrtYd|F\\.Fab|B\\.Fab|Edge\\.Cuts|Margin|Dwgs\\.User|Cmts\\.User|Eco1\\.User|Eco2\\.User|User\\.(?:[1-3][0-9]|4[0-5]|[1-9]))\\b",
       "name": "constant.language.layer.kicad-dru"
     },
 

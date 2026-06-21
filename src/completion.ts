@@ -62,6 +62,11 @@ export interface ApiData {
   severities?: ApiVocab[];
   zoneConnections?: ApiVocab[];
   layers?: ApiVocab[];
+  // VALUE-LITERAL vocab (inside an inner '...' literal in known contexts).
+  // Optional; absent ⇒ no value-literal completion, never a crash.
+  typeValues?: ApiVocab[];
+  // `unitDocs` is consumed by hover only (parallel to the flat `units` array).
+  unitDocs?: ApiVocab[];
 }
 
 // ---- public completion-entry types (no vscode dependency) ------------------
@@ -75,7 +80,8 @@ export type EntryKind =
   | 'disallowCategory'
   | 'zoneConnection'
   | 'severity'
-  | 'layerToken';
+  | 'layerToken'
+  | 'value';
 
 export interface CompletionEntry {
   /** Text shown + matched against (canonical casing). */
@@ -123,6 +129,12 @@ export interface CompletionApi {
   severities(): Omit<CompletionEntry, 'replace'>[];
   /** Layer tokens offered after `(layer `. */
   layerTokens(): Omit<CompletionEntry, 'replace'>[];
+
+  // ---- VALUE-LITERAL vocab (inside an inner '...' in known contexts) ----
+  /** `A.Type` enum values offered inside `A.Type == '...'`. */
+  typeValues(): Omit<CompletionEntry, 'replace'>[];
+  /** Canonical layer names offered inside `existsOnLayer('...')`. */
+  layerValues(): Omit<CompletionEntry, 'replace'>[];
 }
 
 // ---- detail / doc formatting -----------------------------------------------
@@ -394,6 +406,28 @@ export function buildApi(data: ApiData): CompletionApi {
     return layersCache;
   }
 
+  // ---- VALUE-LITERAL builders ----
+  let typeValuesCache: Omit<CompletionEntry, 'replace'>[] | null = null;
+  function typeValues(): Omit<CompletionEntry, 'replace'>[] {
+    if (!typeValuesCache) {
+      typeValuesCache = vocabEntries(data.typeValues, 'value', '1', () => 'A.Type value');
+    }
+    return typeValuesCache;
+  }
+
+  let layerValuesCache: Omit<CompletionEntry, 'replace'>[] | null = null;
+  function layerValues(): Omit<CompletionEntry, 'replace'>[] {
+    if (!layerValuesCache) {
+      // Reuse the layer list, but drop the `outer`/`inner` layer-set shortcuts:
+      // those are valid in `(layer ...)`, not as a single-layer `existsOnLayer` arg.
+      const singleLayers = (data.layers ?? []).filter(
+        (l) => l.name !== 'outer' && l.name !== 'inner',
+      );
+      layerValuesCache = vocabEntries(singleLayers, 'value', '1', () => 'layer');
+    }
+    return layerValuesCache;
+  }
+
   return {
     receivers: data.receivers.slice(),
     membersFor,
@@ -406,6 +440,8 @@ export function buildApi(data: ApiData): CompletionApi {
     zoneConnections,
     severities,
     layerTokens,
+    typeValues,
+    layerValues,
   };
 }
 
@@ -521,6 +557,60 @@ export function enclosingConstraintAtParen(head: string): string | null {
   return m[1];
 }
 
+/**
+ * Inside the expression body (open quote at `bodyOpen`) and inside an inner
+ * `'...'` literal, decide whether that literal is one of the two known
+ * value-completion contexts: a `A.Type ==`/`!=` comparison (`'type'`) or an
+ * `existsOnLayer('...')` argument (`'layer'`). Returns `null` otherwise.
+ *
+ * Only these two contexts offer literal values — every other inner literal
+ * (net names, area names, group names, refdes, …) has no canonical list and is
+ * left freehand.
+ */
+export function valueLiteralContext(
+  lineText: string,
+  bodyOpen: number,
+  pos: number,
+): 'type' | 'layer' | null {
+  if (!insideInnerLiteral(lineText, bodyOpen, pos)) return null;
+  // Find the opening `'` of the literal the cursor is in: track quote parity
+  // from the body-open quote and remember the last opening index.
+  let litOpen = -1;
+  let open = false;
+  for (let i = bodyOpen + 1; i < pos; i++) {
+    if (lineText[i] === "'" && lineText[i - 1] !== '\\') {
+      if (!open) {
+        litOpen = i;
+        open = true;
+      } else {
+        open = false;
+      }
+    }
+  }
+  if (litOpen === -1) return null;
+  const before = lineText.slice(bodyOpen + 1, litOpen);
+  // (a) `A.Type == '` / `A.Type != '` (property-on-left idiom only).
+  if (/\.\s*Type\s*(==|!=)\s*$/.test(before)) return 'type';
+  // (b) `existsOnLayer('` — the only function whose single arg is a layer name.
+  if (/\bexistsOnLayer\s*\(\s*$/.test(before)) return 'layer';
+  return null;
+}
+
+/**
+ * Place value entries inside an inner `'...'` literal: the replace range covers
+ * the partial already typed inside the quotes (letters / digits / `.` / `_`).
+ */
+function placeValues(
+  entries: Omit<CompletionEntry, 'replace'>[],
+  lineText: string,
+  pos: number,
+): CompletionEntry[] {
+  const m = /([A-Za-z0-9_.]*)$/.exec(lineText.slice(0, pos));
+  const partial = (m && m[1]) || '';
+  const start = pos - partial.length;
+  return entries.map((e) => ({ ...e, replace: { start, end: pos } }));
+}
+
 // ---- the pure entry point --------------------------------------------------
 
 /**
@@ -547,8 +637,15 @@ export function computeCompletions(
     return computeStructuralCompletions(lineText, pos, api, precedingText);
   }
 
-  // Gate (b): bail inside an inner '...' string literal.
-  if (insideInnerLiteral(lineText, bodyOpen, pos)) return [];
+  // Gate (b): inside an inner '...' string literal. Two known contexts offer
+  // value completion (`A.Type == '...'`, `existsOnLayer('...')`); every other
+  // literal is freehand and offers nothing.
+  if (insideInnerLiteral(lineText, bodyOpen, pos)) {
+    const vc = valueLiteralContext(lineText, bodyOpen, pos);
+    if (vc === 'type') return placeValues(api.typeValues(), lineText, pos);
+    if (vc === 'layer') return placeValues(api.layerValues(), lineText, pos);
+    return [];
+  }
 
   const left = lineText.slice(0, pos);
 

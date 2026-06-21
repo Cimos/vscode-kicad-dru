@@ -32,6 +32,7 @@ const KIND_MAP: Record<EntryKind, vscode.CompletionItemKind> = {
   zoneConnection: vscode.CompletionItemKind.EnumMember,
   severity: vscode.CompletionItemKind.EnumMember,
   layerToken: vscode.CompletionItemKind.Constant,
+  value: vscode.CompletionItemKind.Value,
 };
 
 function toItem(e: CompletionEntry, lineNumber: number): vscode.CompletionItem {

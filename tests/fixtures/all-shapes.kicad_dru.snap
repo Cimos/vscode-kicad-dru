@@ -89,7 +89,7 @@
 #     ^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru keyword.control.layer.kicad-dru
 #          ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru
 #           ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru string.quoted.double.kicad-dru punctuation.definition.string.begin.kicad-dru
-#            ^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru string.quoted.double.kicad-dru constant.language.layer.kicad-dru
+#            ^^^^^^^^^^^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru string.quoted.double.kicad-dru
 #                       ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru string.quoted.double.kicad-dru punctuation.definition.string.end.kicad-dru
 #                        ^ source.kicad-dru meta.rule.kicad-dru meta.layer.kicad-dru punctuation.section.parens.end.kicad-dru
 >    (constraint physical_clearance (min 3mm))
