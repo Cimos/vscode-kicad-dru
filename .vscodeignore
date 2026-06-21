@@ -23,3 +23,7 @@ vsc-extension-quickstart.md
 node_modules/**
 *.vsix
 package-lock.json
+
+# Ship only the published icon; D1–D5 / E1–E5 are design alternates kept in-repo.
+images/**
+!images/D1_256.png
