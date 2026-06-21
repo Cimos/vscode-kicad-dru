@@ -171,6 +171,9 @@ export function constraintInsertText(name: string, args?: string): string {
   if (m) return `${name} (${m[1]} \${1})`;
   // No bound group. "<none>" -> bare. Anything else (bare int/enum/expr) -> one slot.
   if (/^\s*<none>\s*$/.test(args)) return name;
+  // A quoted-string value (e.g. assertion's "<boolean expr>") -> seed the quotes
+  // so the user lands inside them, e.g. `assertion "$1"`.
+  if (args.includes('"')) return `${name} "\${1}"`;
   return `${name} \${1}`;
 }
 

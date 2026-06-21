@@ -199,6 +199,10 @@ test('zone_connection (enum) seeds one slot, no parens', () => {
   const e = complete('  (constraint |').find((x) => x.label === 'zone_connection');
   assert.equal(e.insertText, 'zone_connection ${1}');
 });
+test('assertion seeds a quoted "$1" slot (its value is a quoted expression)', () => {
+  const e = complete('  (constraint |').find((x) => x.label === 'assertion');
+  assert.equal(e.insertText, 'assertion "${1}"');
+});
 
 // ---------------------------------------------------------------------------
 // 2b — bound keywords at an inner `(` inside a constraint body.
