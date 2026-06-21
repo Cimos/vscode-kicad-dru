@@ -6,6 +6,10 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.0.2] - 2026-06-21
+
+- CI: a Test workflow runs the grammar snapshot tests (`npm test`) on every
+  push and pull request, so grammar regressions are caught before merge.
 - **Retargeted to KiCad 10 stable** (10.0.0 shipped 2026-03-20; the 9.0 line
   ended at 9.0.9). Constraint/function membership re-verified against the
   `10.0.0` source tag.
