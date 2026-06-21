@@ -1,0 +1,12 @@
+# SYNTAX TEST "source.kicad-dru"
+# return_path constraint (KiCad-10 net-chain): support.type.constraint,
+# with (layer "...") and (net "...") sub-clauses. Note: a quoted layer name
+# inside (layer "B.Cu") is a string, not a bare constant.language.layer token.
+
+(rule "ret"
+    (constraint return_path (layer "B.Cu") (net "GND")))
+#               ^^^^^^^^^^^ support.type.constraint.kicad-dru
+#                            ^^^^^ keyword.control.layer.kicad-dru
+#                                   ^^^^ string.quoted.double.kicad-dru
+#                                           ^^^ keyword.control.net.kicad-dru
+#                                                ^^^ string.quoted.double.kicad-dru

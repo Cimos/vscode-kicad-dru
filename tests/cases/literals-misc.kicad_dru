@@ -1,0 +1,35 @@
+# SYNTAX TEST "source.kicad-dru"
+# null literal, ${text-variable}, full-line comment, severity, zone_connection,
+# min_resolved_spokes, and nested single-quoted string inside a condition.
+
+# a full-line comment
+#^ comment.line.number-sign.kicad-dru
+(rule "misc"
+    (condition "A.NetClass == null")
+#                             ^^^^ constant.language.null.kicad-dru
+    (condition "A.NetClass == ${MY_VAR}")
+#                             ^^^^^^^^^ variable.other.text-variable.kicad-dru
+    (severity warning)
+#    ^^^^^^^^ keyword.control.severity.kicad-dru
+#             ^^^^^^^ constant.language.severity.kicad-dru
+    (severity error)
+#             ^^^^^ constant.language.severity.kicad-dru
+    (severity ignore)
+#             ^^^^^^ constant.language.severity.kicad-dru
+    (severity exclusion)
+#             ^^^^^^^^^ constant.language.severity.kicad-dru
+    (constraint zone_connection solid)
+#               ^^^^^^^^^^^^^^^ support.type.constraint.kicad-dru
+#                               ^^^^^ constant.language.zone-connection.kicad-dru
+    (constraint zone_connection thermal_reliefs)
+#                               ^^^^^^^^^^^^^^^ constant.language.zone-connection.kicad-dru
+    (constraint zone_connection none)
+#                               ^^^^ constant.language.zone-connection.kicad-dru
+    (constraint min_resolved_spokes 0)
+#               ^^^^^^^^^^^^^^^^^^^ support.type.constraint.kicad-dru
+#                                   ^ constant.numeric.integer.kicad-dru
+    (constraint min_resolved_spokes 4)
+#                                   ^ constant.numeric.integer.kicad-dru
+    (condition "A.NetClass == 'HV'"))
+#                             ^ string.quoted.single.kicad-dru
+#                              ^^ string.quoted.single.kicad-dru

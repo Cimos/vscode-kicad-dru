@@ -1,0 +1,37 @@
+# SYNTAX TEST "source.kicad-dru"
+# Constraint type tokens: standard set -> support.type.constraint;
+# deprecated aliases -> invalid.deprecated.constraint; KiCad-10/11 additions.
+
+(rule "constraints"
+    (constraint clearance (min 0.2mm))
+#    ^^^^^^^^^^ keyword.control.constraint.kicad-dru
+#               ^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint track_width (min 0.1mm) (opt 0.15mm) (max 0.5mm))
+#               ^^^^^^^^^^^ support.type.constraint.kicad-dru
+#                            ^^^ keyword.other.bound.kicad-dru
+#                                        ^^^ keyword.other.bound.kicad-dru
+#                                                     ^^^ keyword.other.bound.kicad-dru
+    (constraint creepage (min 0.5mm))
+#               ^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint solder_mask_expansion (min 0.05mm))
+#               ^^^^^^^^^^^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint solder_mask_sliver (min 0.05mm))
+#               ^^^^^^^^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint solder_paste_abs_margin (min 0.05mm))
+#               ^^^^^^^^^^^^^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint solder_paste_rel_margin (min -0.1))
+#               ^^^^^^^^^^^^^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint via_dangling)
+#               ^^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint bridged_mask)
+#               ^^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint net_chain_length (max 25mm))
+#               ^^^^^^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint stub_length (max 0.5mm))
+#               ^^^^^^^^^^^ support.type.constraint.kicad-dru
+    (constraint mechanical_clearance (min 0.2mm))
+#               ^^^^^^^^^^^^^^^^^^^^ invalid.deprecated.constraint.kicad-dru
+    (constraint mechanical_hole_clearance (min 0.2mm))
+#               ^^^^^^^^^^^^^^^^^^^^^^^^^ invalid.deprecated.constraint.kicad-dru
+    (constraint hole (min 0.2mm)))
+#               ^^^^ invalid.deprecated.constraint.kicad-dru

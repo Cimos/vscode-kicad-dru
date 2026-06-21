@@ -1,0 +1,12 @@
+# SYNTAX TEST "source.kicad-dru"
+# Negative / leading-dot / bare-negative-ratio numbers.
+
+(rule "numbers"
+    (constraint clearance (min -0.05mm))
+#                              ^^^^^ constant.numeric.kicad-dru
+#                                   ^^ keyword.other.unit.kicad-dru
+    (constraint clearance (min .5mm))
+#                              ^^ constant.numeric.kicad-dru
+#                                ^^ keyword.other.unit.kicad-dru
+    (constraint solder_paste_rel_margin (min -0.1)))
+#                                            ^^^^ constant.numeric.kicad-dru

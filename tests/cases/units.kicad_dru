@@ -1,0 +1,27 @@
+# SYNTAX TEST "source.kicad-dru"
+# Numeric units: value -> constant.numeric, suffix -> keyword.other.unit.
+# track_angle bare number has NO unit; invalid suffix px is NOT a unit.
+
+(rule "units"
+    (constraint clearance (min 0.2mm))
+#                              ^^^ constant.numeric.kicad-dru
+#                                 ^^ keyword.other.unit.kicad-dru
+    (constraint creepage (min 5mil))
+#                             ^ constant.numeric.kicad-dru
+#                              ^^^ keyword.other.unit.kicad-dru
+    (constraint length (opt 1in))
+#                           ^ constant.numeric.kicad-dru
+#                            ^^ keyword.other.unit.kicad-dru
+    (constraint track_angle (max 45deg))
+#                                ^^ constant.numeric.kicad-dru
+#                                  ^^^ keyword.other.unit.kicad-dru
+    (constraint skew (max 10fs))
+#                         ^^ constant.numeric.kicad-dru
+#                           ^^ keyword.other.unit.kicad-dru
+    (constraint net_chain_length (max 150ps))
+#                                     ^^^ constant.numeric.kicad-dru
+#                                        ^^ keyword.other.unit.kicad-dru
+    (constraint track_angle (max 90))
+#                                ^^ constant.numeric.kicad-dru
+    (constraint clearance (min 5px)))
+#                               ^^ -keyword.other.unit.kicad-dru

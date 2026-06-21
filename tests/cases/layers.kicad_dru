@@ -1,0 +1,22 @@
+# SYNTAX TEST "source.kicad-dru"
+# Copper/technical layer names -> constant.language.layer;
+# outer/inner shortcuts inside (layer ...) -> constant.language.layer-shortcut.
+
+(rule "layers"
+    (layer F.Cu)
+#    ^^^^^ keyword.control.layer.kicad-dru
+#          ^^^^ constant.language.layer.kicad-dru
+    (layer B.Cu)
+#          ^^^^ constant.language.layer.kicad-dru
+    (layer In1.Cu)
+#          ^^^^^^ constant.language.layer.kicad-dru
+    (layer In30.Cu)
+#          ^^^^^^^ constant.language.layer.kicad-dru
+    (layer Edge.Cuts)
+#          ^^^^^^^^^ constant.language.layer.kicad-dru
+    (layer F.Mask)
+#          ^^^^^^ constant.language.layer.kicad-dru
+    (layer outer)
+#          ^^^^^ constant.language.layer-shortcut.kicad-dru
+    (layer inner))
+#          ^^^^^ constant.language.layer-shortcut.kicad-dru

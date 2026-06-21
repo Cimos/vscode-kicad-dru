@@ -1,0 +1,21 @@
+# SYNTAX TEST "source.kicad-dru"
+# Operators inside a condition string: comparison / logical / arithmetic.
+
+(rule "ops"
+    (condition "A.x == 1 && A.y != 2 || A.z <= 3")
+#                   ^^ keyword.operator.comparison.kicad-dru
+#                        ^^ keyword.operator.logical.kicad-dru
+#                               ^^ keyword.operator.comparison.kicad-dru
+#                                    ^^ keyword.operator.logical.kicad-dru
+#                                           ^^ keyword.operator.comparison.kicad-dru
+    (condition "A.a >= 1 && A.b < 2 && A.c > 3")
+#                   ^^ keyword.operator.comparison.kicad-dru
+#                               ^ keyword.operator.comparison.kicad-dru
+#                                          ^ keyword.operator.comparison.kicad-dru
+    (condition "!A.flag")
+#               ^ keyword.operator.logical.kicad-dru
+    (constraint assertion "A.a + A.b - A.c * A.d / 2 > 0"))
+#                              ^ keyword.operator.arithmetic.kicad-dru
+#                                    ^ keyword.operator.arithmetic.kicad-dru
+#                                          ^ keyword.operator.arithmetic.kicad-dru
+#                                                ^ keyword.operator.arithmetic.kicad-dru
