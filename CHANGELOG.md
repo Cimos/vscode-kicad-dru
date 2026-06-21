@@ -6,6 +6,17 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- IntelliSense completion inside `(condition "…")` and `(constraint
+  assertion "…")` strings: receiver members after `A.`/`B.`/`AB.`, and
+  receivers + functions at an identifier boundary, each with type/units and
+  a short doc. The extension is now activated (`onLanguage:kicad-dru`) and
+  bundled with esbuild; completion data comes from a single `data/api.json`
+  stamped with the KiCad version and audit date. Completion logic is a pure
+  function covered by unit tests (`npm run test:unit`); these run as part of
+  `npm test`.
+- Distinct function highlighting and the publish-workflow PAT-guard fix (from
+  the prior review) ship together with the above.
+
 ## [0.0.2] - 2026-06-21
 
 - CI: a Test workflow runs the grammar snapshot tests (`npm test`) on every

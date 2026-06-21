@@ -7,8 +7,15 @@
 .claude/**
 agent-context/**
 tests/**
+test/**
+src/**
+esbuild.mjs
 CLAUDE.md
 AGENTS.md
+
+# Test-only ESM build of the pure completion engine (consumed by node --test).
+# The shipped runtime is dist/extension.js; this bundle is not needed in the .vsix.
+dist/completion.mjs
 
 .gitignore
 .gitattributes
