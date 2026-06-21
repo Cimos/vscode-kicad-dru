@@ -30,6 +30,13 @@
     "eda",
     "s-expression"
   ],
+  "scripts": {
+    "test": "vscode-tmgrammar-snap -s source.kicad-dru -g syntaxes/kicad-dru.tmLanguage.json \"tests/fixtures/*.kicad_dru\"",
+    "test:update": "vscode-tmgrammar-snap -s source.kicad-dru -g syntaxes/kicad-dru.tmLanguage.json -u \"tests/fixtures/*.kicad_dru\""
+  },
+  "devDependencies": {
+    "vscode-tmgrammar-test": "^0.1.3"
+  },
   "contributes": {
     "languages": [
       {

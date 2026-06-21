@@ -22,6 +22,7 @@
         { "include": "#disallow-constraint" },
         { "include": "#zone-connection-constraint" },
         { "include": "#min-resolved-spokes-constraint" },
+        { "include": "#return-path-constraint" },
         { "include": "#standard-constraint" },
         { "include": "#deprecated-constraint" },
         { "include": "#condition-clause" },
@@ -172,8 +173,46 @@
       ]
     },
 
+    "return-path-constraint": {
+      "begin": "(\\()\\s*(constraint)\\s+(return_path)\\b",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.parens.begin.kicad-dru" },
+        "2": { "name": "keyword.control.constraint.kicad-dru" },
+        "3": { "name": "support.type.constraint.kicad-dru" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.parens.end.kicad-dru" }
+      },
+      "name": "meta.constraint.return-path.kicad-dru",
+      "comment": "KiCad 10 net-chain constraint. Takes (layer \"…\") and optional (net \"…\") sub-clauses instead of min/opt/max.",
+      "patterns": [
+        { "include": "#layer-clause" },
+        { "include": "#net-clause" },
+        { "include": "#expression" }
+      ]
+    },
+
+    "net-clause": {
+      "begin": "(\\()\\s*(net)\\b",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.parens.begin.kicad-dru" },
+        "2": { "name": "keyword.control.net.kicad-dru" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.parens.end.kicad-dru" }
+      },
+      "name": "meta.net.kicad-dru",
+      "patterns": [
+        { "include": "#string-double" },
+        { "include": "#string-single" },
+        { "include": "#text-variable" }
+      ]
+    },
+
     "standard-constraint": {
-      "begin": "(\\()\\s*(constraint)\\s+(annular_width|bridged_mask|clearance|connection_width|courtyard_clearance|creepage|diff_pair_gap|diff_pair_uncoupled|edge_clearance|hole_clearance|hole_size|hole_to_hole|length|physical_clearance|physical_hole_clearance|silk_clearance|skew|solder_mask_expansion|solder_mask_sliver|solder_paste_abs_margin|solder_paste_rel_margin|text_height|text_thickness|thermal_relief_gap|thermal_spoke_width|track_angle|track_segment_length|track_width|via_count|via_dangling|via_diameter)\\b",
+      "begin": "(\\()\\s*(constraint)\\s+(annular_width|bridged_mask|clearance|connection_width|courtyard_clearance|creepage|diff_pair_gap|diff_pair_uncoupled|edge_clearance|hole_clearance|hole_size|hole_to_hole|length|net_chain_length|physical_clearance|physical_hole_clearance|silk_clearance|skew|solder_mask_expansion|solder_mask_sliver|solder_paste_abs_margin|solder_paste_rel_margin|stub_length|text_height|text_thickness|thermal_relief_gap|thermal_spoke_width|track_angle|track_segment_length|track_width|via_count|via_dangling|via_diameter)\\b",
       "beginCaptures": {
         "1": { "name": "punctuation.section.parens.begin.kicad-dru" },
         "2": { "name": "keyword.control.constraint.kicad-dru" },
@@ -465,7 +504,7 @@
     },
 
     "expression-function-call": {
-      "match": "(?i)\\b(enclosedByArea|existsOnLayer|fromTo|getField|hasComponentClass|hasExactNetclass|hasNetclass|inDiffPair|insideArea|insideCourtyard|insideFrontCourtyard|insideBackCourtyard|intersectsArea|intersectsCourtyard|intersectsFrontCourtyard|intersectsBackCourtyard|isBlindBuriedVia|isBlindVia|isBuriedVia|isCoupledDiffPair|isMicroVia|isPlated|memberOfFootprint|memberOfGroup|memberOfSheetOrChildren|memberOfSheet|memberOf)(?=\\s*\\()",
+      "match": "(?i)\\b(enclosedByArea|existsOnLayer|fromTo|getField|hasComponentClass|hasExactNetclass|hasNetChain|hasNetclass|inDiffPair|inNetChainClass|inNetChain|insideArea|insideCourtyard|insideFrontCourtyard|insideBackCourtyard|intersectsArea|intersectsCourtyard|intersectsFrontCourtyard|intersectsBackCourtyard|isBlindBuriedVia|isBlindVia|isBuriedVia|isCoupledDiffPair|isMicroVia|isPlated|memberOfFootprint|memberOfGroup|memberOfSheetOrChildren|memberOfSheet|memberOf)(?=\\s*\\()",
       "name": "support.function.kicad-dru"
     },
 
