@@ -82,7 +82,7 @@
   "length constraint (min/max)": {
     "prefix": "length",
     "body": ["(constraint length (min ${1:10mm}) (max ${2:50mm}))$0"],
-    "description": "Net total routed length. Length values; time-domain units (ps/ns) supported on master."
+    "description": "Net total routed length. Length values; time-domain units (fs/ps) supported on master."
   },
 
   "skew constraint": {
