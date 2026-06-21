@@ -1,0 +1,38 @@
+# SYNTAX TEST "source.kicad-dru"
+# Inside a (condition "...") string: distinguish receiver-bound function calls
+# (support.function) from property accesses (support.variable.property), across
+# all four receivers A, B, AB, L.
+
+(rule "fn-vs-prop"
+    (condition "A.intersectsArea('z')")
+#               ^ variable.language.accessor.kicad-dru
+#                ^ punctuation.accessor.kicad-dru
+#                 ^^^^^^^^^^^^^^ support.function.kicad-dru
+#                               ^ punctuation.section.parens.begin.kicad-dru
+    (condition "A.insideArea('z')")
+#                 ^^^^^^^^^^ support.function.kicad-dru
+#                            ^ string.quoted.single.kicad-dru
+    (condition "A.NetClass")
+#               ^ variable.language.accessor.kicad-dru
+#                ^ punctuation.accessor.kicad-dru
+#                 ^^^^^^^^ support.variable.property.kicad-dru
+    (condition "A.hasNetChain()")
+#               ^ variable.language.accessor.kicad-dru
+#                 ^^^^^^^^^^^ support.function.kicad-dru
+    (condition "B.NetClass == B.insideArea('x')")
+#               ^ variable.language.accessor.kicad-dru
+#                 ^^^^^^^^ support.variable.property.kicad-dru
+#                          ^^ keyword.operator.comparison.kicad-dru
+#                             ^ variable.language.accessor.kicad-dru
+#                               ^^^^^^^^^^ support.function.kicad-dru
+    (condition "AB.isCoupledDiffPair() && AB.NetClass")
+#               ^^ variable.language.accessor.kicad-dru
+#                  ^^^^^^^^^^^^^^^^^ support.function.kicad-dru
+#                                         ^^ variable.language.accessor.kicad-dru
+#                                            ^^^^^^^^ support.variable.property.kicad-dru
+    (condition "L.Type == 'mixed' || L.existsOnLayer('F.Cu')")
+#               ^ variable.language.accessor.kicad-dru
+#                 ^^^^ support.variable.property.kicad-dru
+#                                    ^ variable.language.accessor.kicad-dru
+#                                      ^^^^^^^^^^^^^ support.function.kicad-dru
+    (constraint clearance (min 1mm)))

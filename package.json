@@ -31,7 +31,9 @@
     "s-expression"
   ],
   "scripts": {
-    "test": "vscode-tmgrammar-snap -s source.kicad-dru -g syntaxes/kicad-dru.tmLanguage.json \"tests/fixtures/*.kicad_dru\"",
+    "test:snap": "vscode-tmgrammar-snap -s source.kicad-dru -g syntaxes/kicad-dru.tmLanguage.json \"tests/fixtures/*.kicad_dru\"",
+    "test:cases": "vscode-tmgrammar-test -g syntaxes/kicad-dru.tmLanguage.json \"tests/cases/*.kicad_dru\"",
+    "test": "npm run test:snap && npm run test:cases",
     "test:update": "vscode-tmgrammar-snap -s source.kicad-dru -g syntaxes/kicad-dru.tmLanguage.json -u \"tests/fixtures/*.kicad_dru\""
   },
   "devDependencies": {

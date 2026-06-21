@@ -1,0 +1,21 @@
+# SYNTAX TEST "source.kicad-dru"
+# disallow categories -> constant.language.disallow-category.
+# Note: through_via/blind_via/buried_via/micro_via and the base via.
+
+(rule "disallow"
+    (constraint disallow track via through_via blind_via)
+#               ^^^^^^^^ support.type.constraint.kicad-dru
+#                        ^^^^^ constant.language.disallow-category.kicad-dru
+#                              ^^^ constant.language.disallow-category.kicad-dru
+#                                  ^^^^^^^^^^^ constant.language.disallow-category.kicad-dru
+#                                              ^^^^^^^^^ constant.language.disallow-category.kicad-dru
+    (constraint disallow buried_via micro_via pad zone)
+#                        ^^^^^^^^^^ constant.language.disallow-category.kicad-dru
+#                                   ^^^^^^^^^ constant.language.disallow-category.kicad-dru
+#                                             ^^^ constant.language.disallow-category.kicad-dru
+#                                                 ^^^^ constant.language.disallow-category.kicad-dru
+    (constraint disallow text graphic hole footprint))
+#                        ^^^^ constant.language.disallow-category.kicad-dru
+#                             ^^^^^^^ constant.language.disallow-category.kicad-dru
+#                                     ^^^^ constant.language.disallow-category.kicad-dru
+#                                          ^^^^^^^^^ constant.language.disallow-category.kicad-dru
