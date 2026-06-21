@@ -508,13 +508,28 @@ export function insideInnerLiteral(lineText: string, bodyOpen: number, pos: numb
  * well-formed DRU files.
  */
 export function openRuleDepth(text: string): number {
+  // Drop whole-line `#` comments first. KiCad comments are line-start-only, and
+  // comment bodies routinely contain unbalanced parens (`# (min 0.3mm))`) or a
+  // stray quote (an inch-mark `5"`) that would otherwise corrupt the paren /
+  // string tracking below and mis-report the rule depth.
+  const cleaned = text
+    .split('\n')
+    .filter((l) => !/^\s*#/.test(l))
+    .join('\n');
+
   let depth = 0;
   let inString = false;
   // Stack of booleans: was the form opened at this paren a `rule`?
   const ruleStack: boolean[] = [];
   let ruleOpen = 0;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
+  for (let i = 0; i < cleaned.length; i++) {
+    const ch = cleaned[i];
+    // Strings never span lines in DRU; reset state at each line boundary so a
+    // (well-formed-per-line) unterminated quote can't bleed across lines.
+    if (ch === '\n') {
+      inString = false;
+      continue;
+    }
     if (ch === '"') {
       inString = !inString;
       continue;
@@ -522,7 +537,7 @@ export function openRuleDepth(text: string): number {
     if (inString) continue;
     if (ch === '(') {
       // Peek the keyword right after `(` (skipping whitespace).
-      const rest = text.slice(i + 1);
+      const rest = cleaned.slice(i + 1);
       const m = /^\s*([A-Za-z_]+)/.exec(rest);
       const isRule = !!m && m[1] === 'rule';
       ruleStack.push(isRule);

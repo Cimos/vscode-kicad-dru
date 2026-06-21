@@ -148,6 +148,19 @@ test('inside a rule body "(" offers rule-body keywords', () => {
   assert.ok(!ls.includes('rule'), 'rule NOT offered inside a rule body');
 });
 
+// Regression: comment bodies must not corrupt rule-depth (found via F5 test).
+test('rule body with a comment containing an unbalanced ")" still offers rule-body keywords', () => {
+  const ls = labels(complete('    (|', '(rule ""\n    # drop to 0.3mm) for HDI\n'));
+  assert.ok(ls.includes('constraint'), 'constraint still offered');
+  assert.ok(!ls.includes('rule'), 'rule NOT offered (comment paren must not break depth)');
+});
+
+test('rule body with an inch-mark (stray ") in a comment still offers rule-body keywords', () => {
+  const ls = labels(complete('    (|', '# board is 5" wide\n(rule ""\n'));
+  assert.ok(ls.includes('condition'), 'condition still offered');
+  assert.ok(!ls.includes('version'), 'version NOT offered (comment quote must not break depth)');
+});
+
 // Gate — structural defers to expression completion inside strings.
 test('GATE: inside (condition "A. structural returns nothing, member completion wins', () => {
   // computeCompletions routes into member completion here; assert it is NOT
