@@ -5,19 +5,19 @@
 #         ^ source.kicad-dru meta.version.kicad-dru constant.numeric.integer.kicad-dru
 #          ^ source.kicad-dru meta.version.kicad-dru punctuation.section.parens.end.kicad-dru
 >
-># Master-only / KiCad 10+ constraints.
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
-># These will FAIL *Check Rule Syntax* on KiCad 9 stable.
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
-># Source: kicad-dru-language.md §3 audit — solder_mask_*, solder_paste_*,
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
-># via_dangling, bridged_mask, and the through_via / blind_via disallow
+># KiCad 10 stable "extras" — beyond the KiCad 9 baseline.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># solder_mask_*, solder_paste_*, via_dangling, bridged_mask and the
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># through_via / blind_via disallow keywords were master-only relative to
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># KiCad 9 but shipped in KiCad 10.0.0; verified against the 10.0.0 tag
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
-># keywords were added in master after the 9.0 branch was cut.
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># (2026-06-20). All of these PASS *Check Rule Syntax* on KiCad 10.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
 >
-># Disallow — through_via and blind_via are master-only keywords
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># Disallow — through_via and blind_via (stable in KiCad 10)
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
 >(rule "no through-hole or blind vias"
 #^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru
 # ^^^^ source.kicad-dru meta.rule.kicad-dru keyword.control.rule.kicad-dru

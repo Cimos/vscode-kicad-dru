@@ -1,12 +1,12 @@
 (version 1)
 
-# Master-only / KiCad 10+ constraints.
-# These will FAIL *Check Rule Syntax* on KiCad 9 stable.
-# Source: kicad-dru-language.md §3 audit — solder_mask_*, solder_paste_*,
-# via_dangling, bridged_mask, and the through_via / blind_via disallow
-# keywords were added in master after the 9.0 branch was cut.
+# KiCad 10 stable "extras" — beyond the KiCad 9 baseline.
+# solder_mask_*, solder_paste_*, via_dangling, bridged_mask and the
+# through_via / blind_via disallow keywords were master-only relative to
+# KiCad 9 but shipped in KiCad 10.0.0; verified against the 10.0.0 tag
+# (2026-06-20). All of these PASS *Check Rule Syntax* on KiCad 10.
 
-# Disallow — through_via and blind_via are master-only keywords
+# Disallow — through_via and blind_via (stable in KiCad 10)
 (rule "no through-hole or blind vias"
     (constraint disallow through_via blind_via)
     (condition "A.intersectsArea('NoThrough')"))

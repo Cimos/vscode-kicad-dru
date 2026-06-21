@@ -5,12 +5,14 @@
 #         ^ source.kicad-dru meta.version.kicad-dru constant.numeric.integer.kicad-dru
 #          ^ source.kicad-dru meta.version.kicad-dru punctuation.section.parens.end.kicad-dru
 >
-># KiCad 10 net-chain / high-speed constraints and functions.
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
-># Grammar-only coverage: these are highlighted but not (yet) in the snippet set
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
-># pending confirmation against the exact 10.0.0 tag.
-#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># KiCad 11 / master net-chain / high-speed constraints and functions.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># These are NOT in KiCad 10.0.0 stable (a 10.0.0 DRC parser rejects them) —
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># verified absent from the 10.0.0 tag, present on master (2026-06-20).
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
+># Grammar-only coverage: highlighted but deliberately kept OUT of the snippet set.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.kicad-dru comment.line.number-sign.kicad-dru
 >
 >(rule "net-chain length budget"
 #^ source.kicad-dru meta.rule.kicad-dru punctuation.section.parens.begin.kicad-dru

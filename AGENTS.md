@@ -31,13 +31,22 @@ a better alternative exists. Full rules: [`./.claude/agents/core.md`](./.claude/
 
 - This is a **VS Code extension** (TypeScript + a TextMate grammar) targeting KiCad
   `.kicad_dru` files — syntax highlighting, snippets, hover, completion in scope.
-- Target dialect: **KiCad 9 stable** (master-only constructs are isolated and called out;
-  see commit `d3db908`). Do not regress that isolation.
+- Target dialect: **KiCad 10 stable** (10.0.0 shipped 2026-03-20). Snippets must round-trip
+  through KiCad 10's *Check Rule Syntax*. Master-only / KiCad-11-dev constructs (the net-chain
+  family: `net_chain_length`, `stub_length`, `return_path`, `inNetChain`, `hasNetChain`,
+  `inNetChainClass`) are highlighted by the grammar but kept OUT of the snippet set. Do not
+  regress that isolation. NOTE: the KiCad-9-era "master-only" set (`solder_mask_expansion`,
+  `solder_mask_sliver`, `solder_paste_abs_margin`, `solder_paste_rel_margin`, `via_dangling`,
+  `bridged_mask`, and the `through_via`/`blind_via` disallow keywords) all shipped in 10.0.0
+  and are now snippet-eligible.
 - Verified facts about the DRU language live in `.claude/docs/kicad-dru-language.md` and
-  `.claude/docs/kicad-dru-property-registry.md`. Both were last re-audited 2026-05-03 against
-  KiCad master — re-run the audit (per `kicad-dru-language-audit.md`) before any edit that
-  depends on parser line numbers or version-specific behaviour.
-- v0.0.x has no automated tests. Exercise changes manually per `.claude/docs/testing-notes.md`
+  `.claude/docs/kicad-dru-property-registry.md`. Last re-audited 2026-05-03 against KiCad master;
+  constraint/function membership re-verified 2026-06-20 against the `10.0.0` tag and master.
+  Re-run the audit (per `kicad-dru-language-audit.md`) before any edit that depends on parser
+  line numbers or version-specific behaviour.
+- Automated tests: `npm test` runs `vscode-tmgrammar-snap` snapshots over `tests/fixtures/`.
+  Regenerate with `npm run test:update` and review the diff after any grammar change. Also
+  exercise manually per `.claude/docs/testing-notes.md`
   before committing.
 - Maintainer identity is **Cimos / cimos** — that's the public publishing handle, not personal
   data. Real personal-data scrub targets are `simon` / `simad` / `cubepilot` / `hex` /

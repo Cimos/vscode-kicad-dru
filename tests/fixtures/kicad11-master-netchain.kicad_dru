@@ -1,8 +1,9 @@
 (version 1)
 
-# KiCad 10 net-chain / high-speed constraints and functions.
-# Grammar-only coverage: these are highlighted but not (yet) in the snippet set
-# pending confirmation against the exact 10.0.0 tag.
+# KiCad 11 / master net-chain / high-speed constraints and functions.
+# These are NOT in KiCad 10.0.0 stable (a 10.0.0 DRC parser rejects them) —
+# verified absent from the 10.0.0 tag, present on master (2026-06-20).
+# Grammar-only coverage: highlighted but deliberately kept OUT of the snippet set.
 
 (rule "net-chain length budget"
     (condition "A.inNetChain('DDR_CMD')")

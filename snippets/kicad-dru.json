@@ -199,6 +199,42 @@
     "description": "Minimum width of copper connection between a pad and a zone fill. KiCad 7+."
   },
 
+  "solder_mask_expansion": {
+    "prefix": "solder_mask_expansion",
+    "body": ["(constraint solder_mask_expansion (opt ${1:0.1mm}))$0"],
+    "description": "Solder-mask expansion around pads / shapes / tracks. KiCad 10+ (master-only on KiCad 9)."
+  },
+
+  "solder_mask_sliver": {
+    "prefix": "solder_mask_sliver",
+    "body": ["(constraint solder_mask_sliver (min ${1:0.25mm}))$0"],
+    "description": "Minimum solder-mask sliver width between copper items. KiCad 10+ (master-only on KiCad 9)."
+  },
+
+  "solder_paste_abs_margin": {
+    "prefix": "solder_paste_abs_margin",
+    "body": ["(constraint solder_paste_abs_margin (opt ${1:-0.05mm}))$0"],
+    "description": "Absolute solder-paste margin for pads (length; usually negative to inset). KiCad 10+ (master-only on KiCad 9)."
+  },
+
+  "solder_paste_rel_margin": {
+    "prefix": "solder_paste_rel_margin",
+    "body": ["(constraint solder_paste_rel_margin (opt ${1:-0.1}))$0"],
+    "description": "Relative solder-paste margin for pads (unitless ratio, no unit suffix; usually negative). KiCad 10+ (master-only on KiCad 9)."
+  },
+
+  "via_dangling": {
+    "prefix": "via_dangling",
+    "body": ["(constraint via_dangling)$0"],
+    "description": "Flag vias that are unconnected or connected on only one layer. Takes no value. KiCad 10+ (master-only on KiCad 9)."
+  },
+
+  "bridged_mask": {
+    "prefix": "bridged_mask",
+    "body": ["(constraint bridged_mask)$0"],
+    "description": "Flag solder-mask bridges between copper items. Takes no value. KiCad 10+ (master-only on KiCad 9)."
+  },
+
   "disallow constraint": {
     "prefix": "disallow",
     "body": ["(constraint disallow ${1|track,via,through_via,blind_via,buried_via,micro_via,pad,zone,text,graphic,hole,footprint|})$0"],
