@@ -12,7 +12,12 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { buildApi, computeCompletions } from '../../dist/completion.mjs';
+import {
+  buildApi,
+  computeCompletions,
+  constraintInsertText,
+  enclosingConstraintAtParen,
+} from '../../dist/completion.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const apiData = JSON.parse(readFileSync(join(here, '../../data/api.json'), 'utf8'));
@@ -164,4 +169,106 @@ test('mid-token / non-slot positions offer nothing structural', () => {
   assert.deepEqual(complete('  foo|'), []);
   // after a closing paren, no open slot
   assert.deepEqual(complete('  (rule "x") |'), []);
+});
+
+// ---------------------------------------------------------------------------
+// 2a — value skeletons on constraint-type acceptance.
+// ---------------------------------------------------------------------------
+
+test('clearance constraint seeds a (min $1) skeleton', () => {
+  const e = complete('  (constraint |').find((x) => x.label === 'clearance');
+  assert.equal(e.insertText, 'clearance (min ${1})');
+});
+test('track_width seeds only the first (min $1) bound', () => {
+  const e = complete('  (constraint |').find((x) => x.label === 'track_width');
+  assert.equal(e.insertText, 'track_width (min ${1})');
+});
+test('via_dangling (<none>) has no snippet override', () => {
+  const e = complete('  (constraint |').find((x) => x.label === 'via_dangling');
+  assert.equal(e.insertText, undefined);
+});
+test('min_resolved_spokes (bare int) seeds one slot', () => {
+  const e = complete('  (constraint |').find((x) => x.label === 'min_resolved_spokes');
+  assert.equal(e.insertText, 'min_resolved_spokes ${1}');
+});
+test('solder_paste_rel_margin seeds (opt $1)', () => {
+  const e = complete('  (constraint |').find((x) => x.label === 'solder_paste_rel_margin');
+  assert.equal(e.insertText, 'solder_paste_rel_margin (opt ${1})');
+});
+test('zone_connection (enum) seeds one slot, no parens', () => {
+  const e = complete('  (constraint |').find((x) => x.label === 'zone_connection');
+  assert.equal(e.insertText, 'zone_connection ${1}');
+});
+
+// ---------------------------------------------------------------------------
+// 2b — bound keywords at an inner `(` inside a constraint body.
+// ---------------------------------------------------------------------------
+
+test('inner ( inside clearance body offers only min', () => {
+  const ls = labels(complete('  (constraint clearance (|'));
+  assert.deepEqual(ls.sort(), ['min']);
+});
+test('inner ( inside track_width body offers min/opt/max', () => {
+  const ls = labels(complete('  (constraint track_width (|')).sort();
+  assert.deepEqual(ls, ['max', 'min', 'opt']);
+});
+test('inner ( inside via_dangling body offers no bounds', () => {
+  assert.deepEqual(complete('  (constraint via_dangling (|'), []);
+});
+test('inner ( inside zone_connection body offers no bounds (enum, not bounds)', () => {
+  assert.deepEqual(complete('  (constraint zone_connection (|'), []);
+});
+test('after a fully typed bound word, nothing structural (C6 unchanged)', () => {
+  assert.deepEqual(complete('  (constraint clearance (min |'), []);
+});
+test('bound entries are keyword kind', () => {
+  assert.ok(complete('  (constraint track_width (|').every((e) => e.kind === 'keyword'));
+});
+test('partial bound word inside a constraint body still resolves bounds', () => {
+  // partial "mi" — head ends at the `(`, enclosingConstraintAtParen matches.
+  const ls = labels(complete('  (constraint track_width (mi|')).sort();
+  assert.deepEqual(ls, ['max', 'min', 'opt']);
+});
+
+// REGRESSION: bound keywords are NEVER offered inside a condition / assertion
+// expression string — that region belongs to member completion.
+test('GATE: inner ( inside a condition string offers no bound keywords', () => {
+  const ls = labels(complete('  (condition "A.foo(|"'));
+  assert.ok(!ls.includes('min'), 'min not offered inside a condition string');
+  assert.ok(!ls.includes('opt'), 'opt not offered inside a condition string');
+  assert.ok(!ls.includes('max'), 'max not offered inside a condition string');
+});
+
+// ---------------------------------------------------------------------------
+// Direct unit tests of the two new pure helpers.
+// ---------------------------------------------------------------------------
+
+test('constraintInsertText parses arg shapes', () => {
+  assert.equal(constraintInsertText('clearance', '(min <len>)'), 'clearance (min ${1})');
+  assert.equal(constraintInsertText('via_dangling', '<none>'), 'via_dangling');
+  assert.equal(
+    constraintInsertText('min_resolved_spokes', '<int 0-4>'),
+    'min_resolved_spokes ${1}',
+  );
+  assert.equal(
+    constraintInsertText('skew', '(min <len>) (opt <len>) (max <len>) (within_diff_pairs)?'),
+    'skew (min ${1})',
+  );
+  assert.equal(
+    constraintInsertText('solder_paste_rel_margin', '(opt <ratio>)'),
+    'solder_paste_rel_margin (opt ${1})',
+  );
+  // no args -> bare name
+  assert.equal(constraintInsertText('bridged_mask', undefined), 'bridged_mask');
+});
+
+test('enclosingConstraintAtParen finds the type at an inner (', () => {
+  assert.equal(enclosingConstraintAtParen('  (constraint clearance ('), 'clearance');
+  assert.equal(enclosingConstraintAtParen('  (constraint clearance (min '), null); // word typed
+  assert.equal(enclosingConstraintAtParen('  (rule "x" ('), null);
+  // last constraint on the line wins
+  assert.equal(
+    enclosingConstraintAtParen('  (constraint clearance (min 1) (constraint track_width ('),
+    'track_width',
+  );
 });

@@ -113,6 +113,8 @@ export interface CompletionApi {
   ruleBodyKeywords(): Omit<CompletionEntry, 'replace'>[];
   /** Constraint types offered after `(constraint `. */
   constraintTypes(): Omit<CompletionEntry, 'replace'>[];
+  /** Bound keywords (min/opt/max) valid inside the given constraint type's body. */
+  boundsFor(constraintType: string): Omit<CompletionEntry, 'replace'>[];
   /** Categories offered after `(constraint disallow `. */
   disallowCategories(): Omit<CompletionEntry, 'replace'>[];
   /** Enum values offered after `(constraint zone_connection `. */
@@ -139,6 +141,37 @@ export function withNotes(doc: string, opts: { since?: string; deprecated?: bool
   if (opts.deprecated) notes.push('**Deprecated.**');
   if (opts.since) notes.push(`_Since KiCad ${opts.since}._`);
   return notes.length ? `${doc}\n\n${notes.join(' ')}` : doc;
+}
+
+// ---- constraint value-skeleton derivation ---------------------------------
+
+/**
+ * Derive a snippet body for a constraint type from its `constraints[].args`
+ * shape. Pure + table-free: parse the arg-string grammar used in data/api.json.
+ *
+ *   "(min <len>)"                          -> "clearance (min $1)"
+ *   "(min <len>) (opt <len>) (max <len>)"  -> "track_width (min $1)"  (only the
+ *                                             first bound is seeded; opt/max are
+ *                                             optional and offered later by 2b)
+ *   "(opt <ratio>)"                        -> "solder_paste_rel_margin (opt $1)"
+ *   "<none>"                               -> "via_dangling"           (bare)
+ *   "<int 0-4>" / "<enum ...>" / "<expr>"  -> "min_resolved_spokes $1" (one slot)
+ *
+ * The leading token of the FIRST `(<bound> ...)` group, if present, seeds a
+ * single `(<bound> $1)`. A bare value spec (int/enum/expr) seeds one `$1` slot.
+ * `<none>` seeds nothing (returns the bare name). `disallow`'s category slot is
+ * not reached here (disallow lives in `keywords`, not `constraints`); were it
+ * added, its `<categories...>` args fall through to the `${name} ${1}` branch,
+ * leaving a single category slot.
+ */
+export function constraintInsertText(name: string, args?: string): string {
+  if (!args) return name;
+  // First parenthesised bound group, e.g. "(min <len>)".
+  const m = /\(\s*(min|opt|max)\b/.exec(args);
+  if (m) return `${name} (${m[1]} \${1})`;
+  // No bound group. "<none>" -> bare. Anything else (bare int/enum/expr) -> one slot.
+  if (/^\s*<none>\s*$/.test(args)) return name;
+  return `${name} \${1}`;
 }
 
 // ---- build the default CompletionApi from parsed api.json ------------------
@@ -273,14 +306,47 @@ export function buildApi(data: ApiData): CompletionApi {
   let constraintTypesCache: Omit<CompletionEntry, 'replace'>[] | null = null;
   function constraintTypes(): Omit<CompletionEntry, 'replace'>[] {
     if (!constraintTypesCache) {
-      constraintTypesCache = vocabEntries(
-        data.constraints,
-        'constraintType',
-        '0',
-        (v) => v.args ?? 'constraint type',
-      );
+      // Attach a value skeleton derived from each type's `args` shape. Set
+      // `insertText` to `undefined` when it equals the label (e.g. via_dangling
+      // `<none>`) so we don't force a pointless SnippetString.
+      constraintTypesCache = (data.constraints ?? []).map<Omit<CompletionEntry, 'replace'>>((v) => {
+        const ins = constraintInsertText(v.name, v.args);
+        return {
+          label: v.name,
+          kind: 'constraintType',
+          detail: v.args ?? 'constraint type',
+          doc: withNotes(v.doc, v),
+          insertText: ins === v.name ? undefined : ins,
+          // deprecated entries sort last within their bucket
+          sortText: `0_${v.deprecated ? 'z' : 'a'}_${v.name}`,
+        };
+      });
     }
     return constraintTypesCache;
+  }
+
+  // Bound keywords (min/opt/max) usable inside a constraint body, parsed once
+  // per type from its `args`. Constraints with no `(min|opt|max)` group yield
+  // `[]` (e.g. via_dangling `<none>`, zone_connection `<enum …>`).
+  const boundsCache = new Map<string, Omit<CompletionEntry, 'replace'>[]>();
+  function boundsFor(constraintType: string): Omit<CompletionEntry, 'replace'>[] {
+    let cached = boundsCache.get(constraintType);
+    if (!cached) {
+      const c = (data.constraints ?? []).find((v) => v.name === constraintType);
+      const args = c?.args ?? '';
+      const bounds = ['min', 'opt', 'max'].filter((b) =>
+        new RegExp(`\\(\\s*${b}\\b`).test(args),
+      );
+      cached = bounds.map<Omit<CompletionEntry, 'replace'>>((b) => ({
+        label: b,
+        kind: 'keyword',
+        detail: 'bound',
+        doc: `\`${b}\` bound for the \`${constraintType}\` constraint.`,
+        sortText: `0_${b === 'min' ? '0' : b === 'opt' ? '1' : '2'}_${b}`,
+      }));
+      boundsCache.set(constraintType, cached);
+    }
+    return cached;
   }
 
   let disallowCache: Omit<CompletionEntry, 'replace'>[] | null = null;
@@ -332,6 +398,7 @@ export function buildApi(data: ApiData): CompletionApi {
     topKeywords,
     ruleBodyKeywords,
     constraintTypes,
+    boundsFor,
     disallowCategories,
     zoneConnections,
     severities,
@@ -429,6 +496,26 @@ export function openRuleDepth(text: string): number {
     }
   }
   return ruleOpen;
+}
+
+/**
+ * If `head` ends inside a `(constraint <type> ... (` boundary — i.e. the cursor
+ * sits right after a freshly opened inner `(` whose enclosing form is a
+ * constraint — return `<type>`; else null. Single-line: DRU constraints and
+ * their bound groups live on one physical line in practice.
+ *
+ * The negative lookahead `(?![\s\S]*\(\s*constraint\b)` picks the LAST
+ * `(constraint <type>` on the line (no later constraint follows), matching the
+ * single-line heuristic the rest of this module uses.
+ */
+export function enclosingConstraintAtParen(head: string): string | null {
+  // head must end at an open inner paren boundary: "... ("  (optionally ws)
+  if (!/\(\s*$/.test(head)) return null;
+  // The text up to that just-opened paren must contain `(constraint <type>`,
+  // and we take the last such constraint on the line.
+  const m = /\(\s*constraint\s+([a-z_]+)\b(?![\s\S]*\(\s*constraint\b)/.exec(head);
+  if (!m) return null;
+  return m[1];
 }
 
 // ---- the pure entry point --------------------------------------------------
@@ -562,6 +649,16 @@ export function computeStructuralCompletions(
   // C6: after `(min|opt|max ` — numbers/units are freehand, nothing structural.
   if (/\(\s*(?:min|opt|max)\s+$/.test(head)) {
     return [];
+  }
+
+  // C6b: a fresh inner `(` inside a `(constraint <type> ...)` body -> bound
+  // keywords (min/opt/max) supported by that type. Placed before C7/C8 so an
+  // inner `(` is read as a bound slot, not a rule-body form-start. C6 above
+  // already won for `(min `/`(opt `/`(max ` (a bound word + space); C6b fires
+  // one level out, when head ends in `(` with no bound word yet.
+  const ct = enclosingConstraintAtParen(head);
+  if (ct) {
+    return place(api.boundsFor(ct));
   }
 
   // C7/C8: form-start, just after `(` (possibly with a bare partial keyword

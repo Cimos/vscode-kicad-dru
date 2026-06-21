@@ -1,0 +1,33 @@
+# SYNTAX TEST "source.kicad-dru"
+# Graceful degradation on malformed / unknown input. These assertions LOCK the
+# grammar's CURRENT behaviour (not aspirations): they document what actually
+# gets emitted so a regression in tokenisation is caught.
+
+(rule "malformed"
+
+# An UNKNOWN constraint keyword is NOT promoted to support.type.constraint. The
+# whole `(constraint frobnicate ...)` form falls through to the generic
+# `#parens` rule, so `frobnicate` scopes as variable.other (not a constraint
+# type).
+    (constraint frobnicate (min 1mm))
+#               ^^^^^^^^^^ variable.other.kicad-dru
+
+# An invalid unit (px) does NOT scope `px` as keyword.other.unit. The whole
+# `5px` token is left as bare embedded-expression text (no numeric/unit scope).
+    (condition "A.Width > 5px")
+#                 ^^^^^ support.variable.property.kicad-dru
+#                       ^ keyword.operator.comparison.kicad-dru
+#                         ^^^ meta.embedded.expression.kicad-dru
+
+# A VALID unit on the sibling line still tokenises as numeric + unit, for
+# contrast with the invalid `5px` above.
+    (condition "A.Width > 5mm")
+#                         ^ constant.numeric.kicad-dru
+#                          ^^ keyword.other.unit.kicad-dru
+
+# An unbalanced paren (the rule's closing `)` is missing) must not crash
+# tokenisation: the constraint type and its bound still scope correctly.
+    (constraint clearance (min 1mm)
+#               ^^^^^^^^^ support.type.constraint.kicad-dru
+#                          ^^^ keyword.other.bound.kicad-dru
+#                              ^ constant.numeric.kicad-dru

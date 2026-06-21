@@ -434,6 +434,7 @@
     "expression-non-string-patterns": {
       "patterns": [
         { "include": "#expression-text-variable" },
+        { "include": "#expression-accessor-deprecated-function" },
         { "include": "#expression-accessor-function" },
         { "include": "#expression-accessor-property" },
         { "include": "#expression-accessor" },
@@ -501,6 +502,16 @@
     "expression-text-variable": {
       "match": "\\$\\{[^}]+\\}",
       "name": "variable.other.text-variable.kicad-dru"
+    },
+
+    "expression-accessor-deprecated-function": {
+      "comment": "Receiver-bound DEPRECATED function call (insideArea/insideCourtyard/insideFrontCourtyard/insideBackCourtyard/memberOf). Matched BEFORE expression-accessor-function so the name scopes invalid.deprecated rather than support.function. memberOf uses a negative lookahead so it does NOT swallow memberOfGroup/memberOfFootprint/memberOfSheet/memberOfSheetOrChildren.",
+      "match": "(\\bAB\\b|\\b[ABL]\\b)(\\.)(insideArea|insideCourtyard|insideFrontCourtyard|insideBackCourtyard|memberOf(?![A-Za-z0-9_]))(?=\\s*\\()",
+      "captures": {
+        "1": { "name": "variable.language.accessor.kicad-dru" },
+        "2": { "name": "punctuation.accessor.kicad-dru" },
+        "3": { "name": "invalid.deprecated.function.kicad-dru" }
+      }
     },
 
     "expression-accessor-function": {

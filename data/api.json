@@ -227,9 +227,9 @@
     { "name": "insideArea", "args": "insideArea('name')", "returns": "bool", "deprecated": true, "doc": "DEPRECATED alias for intersectsArea. Geometry-dependent." },
     { "name": "memberOf", "args": "memberOf('name')", "returns": "bool", "deprecated": true, "doc": "DEPRECATED alias for memberOfGroup." },
 
-    { "name": "inNetChain", "args": "inNetChain('net')", "returns": "bool", "since": "11", "doc": "True if the item's net is part of the named net chain (master/v11)." },
-    { "name": "hasNetChain", "args": "hasNetChain('net')", "returns": "bool", "since": "11", "doc": "True if the item belongs to the named net chain (master/v11)." },
-    { "name": "inNetChainClass", "args": "inNetChainClass('class')", "returns": "bool", "since": "11", "doc": "True if the item's net chain belongs to the named class (master/v11)." }
+    { "name": "inNetChain", "args": "inNetChain('name')", "returns": "bool", "since": "11", "doc": "True if the item's net chain name matches the given pattern (wildcards). KiCad 11 / master only." },
+    { "name": "hasNetChain", "args": "hasNetChain()", "returns": "bool", "since": "11", "doc": "True if the item's net has a (non-empty) net chain assigned. Takes no arguments. KiCad 11 / master only." },
+    { "name": "inNetChainClass", "args": "inNetChainClass('name')", "returns": "bool", "since": "11", "doc": "True if the class of the item's net chain matches the given pattern (wildcards). KiCad 11 / master only." }
   ],
   "keywords": [
     { "name": "version", "doc": "File format version header; must be the first form, e.g. (version 1)." },

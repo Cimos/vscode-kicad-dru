@@ -1,0 +1,23 @@
+# SYNTAX TEST "source.kicad-dru"
+# The five deprecated receiver-bound function calls (insideArea, insideCourtyard,
+# insideFrontCourtyard, insideBackCourtyard, memberOf) scope their NAME as
+# invalid.deprecated.function.kicad-dru, while non-deprecated calls keep
+# support.function.kicad-dru and the memberOf* family is untouched.
+
+(rule "deprecated-fns"
+    (condition "A.insideArea('z')")
+#                 ^^^^^^^^^^ invalid.deprecated.function.kicad-dru
+    (condition "A.intersectsArea('z')")
+#                 ^^^^^^^^^^^^^^ support.function.kicad-dru
+    (condition "A.memberOf('g')")
+#                 ^^^^^^^^ invalid.deprecated.function.kicad-dru
+    (condition "A.memberOfGroup('g')")
+#                 ^^^^^^^^^^^^^ support.function.kicad-dru
+    (condition "A.memberOfFootprint('U1')")
+#                 ^^^^^^^^^^^^^^^^^ support.function.kicad-dru
+    (condition "B.insideCourtyard('R1') || B.insideFrontCourtyard('R1')")
+#                 ^^^^^^^^^^^^^^^ invalid.deprecated.function.kicad-dru
+#                                            ^^^^^^^^^^^^^^^^^^^^ invalid.deprecated.function.kicad-dru
+    (condition "AB.insideBackCourtyard('R1')")
+#                  ^^^^^^^^^^^^^^^^^^^ invalid.deprecated.function.kicad-dru
+    (constraint clearance (min 1mm)))
