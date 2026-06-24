@@ -11,8 +11,8 @@ Legend: ✅ done · 🔜 next · 📋 later · ♻ ongoing
 |---|---|---|
 | v0.0.1 | TextMate grammar, 47 snippets, language configuration | ✅ |
 | v0.0.2 | Snapshot test harness; CI test-gate; publish-CI hardening; KiCad 10 retarget; icon-only package; shipped via GitHub Releases | ✅ |
-| v0.1.0 | IntelliSense completion inside `condition` / `assertion` strings (receivers → properties → functions) — GitHub issue #1 | 🔜 |
-| v0.1.x | Hover docs (type / units / return) for properties and functions | 📋 |
+| v0.1.0 | IntelliSense completion (expression + structural + bound + value-literal) and hover help; activated esbuild extension — GitHub issue #1 | ✅ |
+| v0.1.x | Wider hover / completion coverage; polish | 📋 |
 | v0.2+ | Diagnostics / semantic validation of rule well-formedness (possibly LSP) | 📋 |
 | — | Marketplace + Open VSX distribution (blocked on Azure DevOps PAT) | 📋 |
 | — | Re-audit the language/property reference against the KiCad 10.0.0 source | 📋 |
@@ -21,10 +21,11 @@ Legend: ✅ done · 🔜 next · 📋 later · ♻ ongoing
 
 ## Where we are
 
-v0.0.x is shipped and current for KiCad 10. The grammar is locked by snapshot
-tests that run in CI on every push and pull request. The next decision is
-whether to start the v0.1.0 completion provider — the first feature that turns
-the static highlighter into an activated extension.
+v0.1.0 — completion + hover — is built, reviewed, and being released. The
+static highlighter is now an activated, esbuild-bundled extension whose
+completion/hover logic is pure, unit-tested, and data-driven from
+`data/api.json`; the grammar stays locked by CI snapshot + assertion tests.
+Next is v0.2+ diagnostics / semantic validation.
 
 ## v0.1.0 — completion provider (the next jump)
 

@@ -6,6 +6,8 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-06-24
+
 - IntelliSense completion. Inside `(condition "…")` / `(constraint
   assertion "…")` strings: receiver members after `A.`/`B.`/`AB.`, and
   receivers + functions at an identifier boundary. While writing rule
