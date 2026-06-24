@@ -25,8 +25,21 @@ string literals. This extension adds that for `.kicad_dru` specifically.
   by netclass, disallow, length matching, via and track sizing,
   hole-to-hole, assertion. Type the prefix in a paren context, accept,
   tab through.
+- **IntelliSense completion**. Inside `(condition "…")` /
+  `(constraint assertion "…")` strings: a receiver and `.` (`A.`, `B.`,
+  `AB.`) gets its properties, an identifier boundary gets receivers and
+  functions. While writing the rule structure: after `(constraint ` you get
+  constraint types, after `(layer ` layer names, after `(severity `
+  severities, after `(constraint disallow ` the categories. Each item shows
+  its type/units or argument shape and a short doc.
+- **Hover help**. Hover a constraint type, property, function, layer,
+  severity, or disallow category to see what it is, its argument/type, and a
+  one-line description.
 - **Editor niceties**: `#` line comment toggling, paren matching, folding
   on each top-level `(rule …)` block, auto-closing pairs.
+
+Completion and hover are backed by a single `data/api.json` audited against
+KiCad 10.
 
 ## What this extension does *not* do
 
@@ -37,8 +50,9 @@ string literals. This extension adds that for `.kicad_dru` specifically.
   highlighter` covers most of them; `oaslananka.kicadstudio` covers KiCad
   workflows end-to-end). This extension intentionally stays focused on
   `.kicad_dru` so that DRU support is first-class instead of incidental.
-- It does not provide hover docs, completion, or diagnostics. Those are
-  potential future additions and are tracked against later versions.
+- It does not provide diagnostics (semantic rule validation) yet. That is
+  tracked as
+  later additions.
 
 ## Installation
 

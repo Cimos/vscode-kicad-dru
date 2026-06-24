@@ -1,0 +1,37 @@
+# SYNTAX TEST "source.kicad-dru"
+# Locks the three KiCad-10.0.0-verified grammar nits:
+#  1. F.Courtyard / B.Courtyard are NOT valid layer tokens (only F.CrtYd/B.CrtYd
+#     exist in KiCad's NameToLayer map) -> must NOT scope as a layer.
+#  2. '#' is a comment ONLY at line start; inline '#' and '#' inside a
+#     condition string are live tokens, NOT comment.line.
+#  3. User.N layers run 1..45 (MAX_USER_DEFINED_LAYERS); User.46 is out of range.
+
+(rule "courtyard-longform-is-not-a-layer"
+    (layer "F.Courtyard")
+#          ^ string.quoted.double.kicad-dru
+#           ^^^^^^^^^^^ string.quoted.double.kicad-dru
+#           ^^^^^^^^^^^ -constant.language.layer.kicad-dru
+    (layer "B.Courtyard"))
+#           ^^^^^^^^^^^ string.quoted.double.kicad-dru
+#           ^^^^^^^^^^^ -constant.language.layer.kicad-dru
+
+(rule "canonical-courtyard-token-is-a-layer"
+    (layer "F.CrtYd"))
+#           ^^^^^^^ constant.language.layer.kicad-dru
+
+(rule "user-layer-out-of-range"
+    (layer User.46))
+#          ^^^^^^^ -constant.language.layer.kicad-dru
+
+# A line-start '#' (after whitespace) is a comment.
+    # leading hash is a comment
+#   ^ comment.line.number-sign.kicad-dru
+
+(rule "inline-hash-is-not-a-comment"
+    (constraint clearance (min 1mm)) # inline hash is live, not a comment
+#                                    ^ -comment.line.number-sign.kicad-dru
+#                                      ^^^^^^ -comment.line.number-sign.kicad-dru
+    (condition "A.Layer == 'F.Cu' # not a comment"))
+#                                 ^ -comment.line.number-sign.kicad-dru
+#                                 ^ string.quoted.double.kicad-dru
+#                                   ^^^ -comment.line.number-sign.kicad-dru

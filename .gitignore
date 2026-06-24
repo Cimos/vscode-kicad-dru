@@ -2,6 +2,9 @@
 *.vsix
 .vscode-test/
 
+# esbuild bundle output (shipped in the .vsix, not committed)
+dist/
+
 # Agent-context overlay (bootstrapped, source of truth lives elsewhere)
 .claude/
 

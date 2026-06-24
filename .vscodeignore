@@ -7,8 +7,15 @@
 .claude/**
 agent-context/**
 tests/**
+test/**
+src/**
+esbuild.mjs
 CLAUDE.md
 AGENTS.md
+
+# Test-only ESM builds of the pure modules (consumed by node --test).
+# The shipped runtime is dist/extension.js; these bundles aren't needed in the .vsix.
+dist/*.mjs
 
 .gitignore
 .gitattributes

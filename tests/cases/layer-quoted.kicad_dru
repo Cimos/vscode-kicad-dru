@@ -1,0 +1,13 @@
+# SYNTAX TEST "source.kicad-dru"
+# A known layer token inside a quoted (layer "...") is highlighted as a layer,
+# while the quotes stay string punctuation.
+
+(rule "quoted-layer"
+    (layer "F.Cu"))
+#          ^ punctuation.definition.string.begin.kicad-dru
+#           ^^^^ constant.language.layer.kicad-dru
+#               ^ punctuation.definition.string.end.kicad-dru
+
+(rule "quoted-layer-inner"
+    (layer "In1.Cu"))
+#           ^^^^^^ constant.language.layer.kicad-dru
