@@ -20,6 +20,11 @@ jobs:
         with:
           node-version: 22
 
+      # vsce package runs `vscode:prepublish` (tsc + esbuild), which needs the
+      # devDependencies — the extension is no longer static.
+      - name: Install dependencies
+        run: npm ci
+
       - name: Verify package.json version matches tag
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
