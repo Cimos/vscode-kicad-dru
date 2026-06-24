@@ -221,7 +221,7 @@
     { "name": "Single-sided", "receivers": ["A", "B"], "type": "bool", "reachable": false, "doc": "Tuning pattern single-sided; UNREACHABLE (hyphen blocks the lexer)." }
   ],
   "functions": [
-    { "name": "existsOnLayer", "args": "existsOnLayer('layer')", "returns": "bool", "doc": "True if the item exists on the named layer (canonical or user-defined; wildcards)." },
+    { "name": "existsOnLayer", "args": "existsOnLayer('layer')", "returns": "bool", "doc": "True if the item exists on the named layer (standard or user-defined; wildcards)." },
     { "name": "isPlated", "args": "isPlated()", "returns": "bool", "doc": "True for PTH/NPTH pads and platable vias." },
     { "name": "isMicroVia", "args": "isMicroVia()", "returns": "bool", "doc": "True if the item is a micro via." },
     { "name": "isBlindVia", "args": "isBlindVia()", "returns": "bool", "doc": "True if the item is a blind via." },

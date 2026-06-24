@@ -95,6 +95,10 @@ export function computeHover(
 ): HoverResult | null {
   const pos = Math.max(0, Math.min(charPositionInString, lineText.length));
 
+  // KiCad `#` comments are line-start-only, so a comment line is entirely a
+  // comment — nothing on it is hoverable. (A mid-line `#` is NOT a comment.)
+  if (/^\s*#/.test(lineText)) return null;
+
   // ---- token resolution: find the word span containing the cursor ----
   // Tokens are identifier-like runs (dotted accessors and layer names keep
   // their `.`; property names may carry `%`/`-`). Operators are recognised so

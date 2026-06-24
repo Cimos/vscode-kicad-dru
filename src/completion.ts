@@ -620,8 +620,10 @@ function placeValues(
   lineText: string,
   pos: number,
 ): CompletionEntry[] {
-  const m = /([A-Za-z0-9_.]*)$/.exec(lineText.slice(0, pos));
-  const partial = (m && m[1]) || '';
+  // Non-optional, right-anchored so it matches once and fails fast (the old
+  // optional-group-at-$ form was O(n^2) on long lines, on the keystroke path).
+  const m = /[A-Za-z0-9_.]+$/.exec(lineText.slice(0, pos));
+  const partial = m ? m[0] : '';
   const start = pos - partial.length;
   return entries.map((e) => ({ ...e, replace: { start, end: pos } }));
 }
@@ -681,8 +683,8 @@ export function computeCompletions(
 
   // Gate (c2): identifier-boundary context — optional bare partial identifier,
   // not preceded by a dot. Offer receivers + `null`.
-  const idMatch = /([A-Za-z_][A-Za-z0-9_]*)?$/.exec(left);
-  const partial = (idMatch && idMatch[1]) || '';
+  const idMatch = /[A-Za-z_][A-Za-z0-9_]*$/.exec(left);
+  const partial = idMatch ? idMatch[0] : '';
   const start = pos - partial.length;
   return api.topLevel().map((e) => ({ ...e, replace: { start, end: pos } }));
 }
@@ -726,8 +728,8 @@ export function computeStructuralCompletions(
 
   // Bare partial word under the cursor (`.` and `-` included so layer tokens
   // like `F.C|` / `Edge.Cuts` replace cleanly).
-  const partialMatch = /([A-Za-z_][A-Za-z0-9_.\-]*)?$/.exec(left);
-  const partial = (partialMatch && partialMatch[1]) || '';
+  const partialMatch = /[A-Za-z_][A-Za-z0-9_.\-]*$/.exec(left);
+  const partial = partialMatch ? partialMatch[0] : '';
   const start = pos - partial.length;
   const head = left.slice(0, start);
 

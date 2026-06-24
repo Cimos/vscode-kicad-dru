@@ -60,6 +60,7 @@ test('constraint types carry their arg-shape detail and since notes', () => {
 test('deprecated constraint types are offered but sorted last', () => {
   const entries = complete('  (constraint |');
   const dep = entries.find((e) => e.label === 'mechanical_clearance');
+  assert.ok(dep, 'a deprecated constraint type (mechanical_clearance) is offered');
   if (dep) {
     assert.match(dep.doc, /Deprecated/i);
     const live = entries.find((e) => e.label === 'clearance');
