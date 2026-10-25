@@ -43,16 +43,20 @@ KiCad 10.
 
 ## What this extension does *not* do
 
-- It is a **highlighter**, not a validator. KiCad's own *Check Rule Syntax*
-  button remains the source of truth for whether a rule is valid.
+- It is not a full validator. Diagnostics flag only definite structural
+  mistakes (unbalanced parentheses, a missing `(version 1)` header, unknown
+  constraint types or keywords, bad `severity` / `disallow` /
+  `zone_connection` values, units on unitless constraints). KiCad's own
+  *Check Rule Syntax* button remains the source of truth for whether a rule
+  is valid. Tune or disable with the `kicad-dru.diagnostics` setting
+  (`all` / `errors` / `off`).
 - It does not parse `.kicad_pcb`, `.kicad_sch`, `.kicad_sym`, or any other
   KiCad file. Those have other extensions (`DanielMeza.kicad-syntax-
   highlighter` covers most of them; `oaslananka.kicadstudio` covers KiCad
   workflows end-to-end). This extension intentionally stays focused on
   `.kicad_dru` so that DRU support is first-class instead of incidental.
-- It does not provide diagnostics (semantic rule validation) yet. That is
-  tracked as
-  later additions.
+- It does not check rule semantics (value ranges, whether a constraint makes
+  sense on a layer, cross-rule interactions). That is KiCad's job.
 
 ## Installation
 

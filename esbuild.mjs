@@ -48,17 +48,24 @@ const foldingOpts = {
   outfile: 'dist/folding.mjs',
 };
 
+// Pure-logic ESM builds of the s-expression parser and the diagnostics engine
+// (diagnostics bundles parser transitively), same rationale as `pureOpts`.
+const parserOpts = {
+  ...pureOpts,
+  entryPoints: ['src/parser.ts'],
+  outfile: 'dist/parser.mjs',
+};
+const diagnosticsOpts = {
+  ...pureOpts,
+  entryPoints: ['src/diagnostics.ts'],
+  outfile: 'dist/diagnostics.mjs',
+};
+
+const allOpts = [extensionOpts, pureOpts, hoverOpts, foldingOpts, parserOpts, diagnosticsOpts];
+
 if (watch) {
-  const c1 = await esbuild.context(extensionOpts);
-  const c2 = await esbuild.context(pureOpts);
-  const c3 = await esbuild.context(hoverOpts);
-  const c4 = await esbuild.context(foldingOpts);
-  await Promise.all([c1.watch(), c2.watch(), c3.watch(), c4.watch()]);
+  const contexts = await Promise.all(allOpts.map((o) => esbuild.context(o)));
+  await Promise.all(contexts.map((c) => c.watch()));
 } else {
-  await Promise.all([
-    esbuild.build(extensionOpts),
-    esbuild.build(pureOpts),
-    esbuild.build(hoverOpts),
-    esbuild.build(foldingOpts),
-  ]);
+  await Promise.all(allOpts.map((o) => esbuild.build(o)));
 }

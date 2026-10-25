@@ -11,6 +11,7 @@ import {
 } from './completion';
 import { computeHover } from './hover';
 import { computeFoldingRanges } from './folding';
+import { computeDiagnostics, type Level } from './diagnostics';
 
 /**
  * Extension entry point. The only `vscode`-coupled file.
@@ -136,6 +137,64 @@ export function activate(context: vscode.ExtensionContext): void {
     ),
     vscode.languages.registerHoverProvider({ language: 'kicad-dru' }, hoverProvider),
   );
+
+  registerDiagnostics(context, data);
+}
+
+/**
+ * Diagnostics adapter — pure decision-making lives in `computeDiagnostics`
+ * (src/diagnostics.ts). Validates every open `.kicad_dru` document on open,
+ * on change (debounced), and when the `kicad-dru.diagnostics` setting flips.
+ */
+function registerDiagnostics(context: vscode.ExtensionContext, data: ApiData): void {
+  const collection = vscode.languages.createDiagnosticCollection('kicad-dru');
+  const SEVERITY = {
+    error: vscode.DiagnosticSeverity.Error,
+    warning: vscode.DiagnosticSeverity.Warning,
+  } as const;
+  const level = (): Level =>
+    vscode.workspace.getConfiguration('kicad-dru').get<Level>('diagnostics', 'all');
+
+  const validate = (doc: vscode.TextDocument): void => {
+    if (doc.languageId !== 'kicad-dru') return;
+    const items = computeDiagnostics(doc.getText(), data, level()).map((d) => {
+      const range = new vscode.Range(d.range.start.line, d.range.start.col, d.range.end.line, d.range.end.col);
+      const item = new vscode.Diagnostic(range, d.message, SEVERITY[d.severity]);
+      item.source = 'kicad-dru';
+      item.code = d.code;
+      return item;
+    });
+    collection.set(doc.uri, items);
+  };
+
+  const timers = new Map<string, ReturnType<typeof setTimeout>>();
+  const schedule = (doc: vscode.TextDocument): void => {
+    if (doc.languageId !== 'kicad-dru') return;
+    const key = doc.uri.toString();
+    clearTimeout(timers.get(key));
+    timers.set(key, setTimeout(() => {
+      timers.delete(key);
+      validate(doc);
+    }, 300));
+  };
+
+  context.subscriptions.push(
+    collection,
+    vscode.workspace.onDidOpenTextDocument(validate),
+    vscode.workspace.onDidChangeTextDocument((e) => schedule(e.document)),
+    vscode.workspace.onDidCloseTextDocument((doc) => {
+      clearTimeout(timers.get(doc.uri.toString()));
+      timers.delete(doc.uri.toString());
+      collection.delete(doc.uri);
+    }),
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('kicad-dru.diagnostics')) {
+        vscode.workspace.textDocuments.forEach(validate);
+      }
+    }),
+    { dispose: () => timers.forEach((t) => clearTimeout(t)) },
+  );
+  vscode.workspace.textDocuments.forEach(validate);
 }
 
 export function deactivate(): void {

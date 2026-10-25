@@ -6,6 +6,22 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Diagnostics (structural tier). Red squiggles + Problems entries for
+  definite mistakes only: unbalanced parentheses, unterminated strings,
+  missing / duplicate / non-integer `(version …)` header, unknown top-level
+  or rule-body keywords, unknown constraint types (with a case hint),
+  unknown sub-forms inside a constraint, invalid `severity` / `disallow` /
+  `zone_connection` values, and a unit suffix on a unitless constraint
+  (`track_angle`, `via_count`, `min_resolved_spokes`,
+  `solder_paste_rel_margin`). New setting `kicad-dru.diagnostics`
+  (`all` | `errors` | `off`, default `all`). Every shipped fixture and
+  snippet is asserted diagnostic-free in CI.
+- Data: `bridged_mask`, `solder_mask_expansion`, `solder_mask_sliver`,
+  `solder_paste_abs_margin`, `solder_paste_rel_margin`, `via_dangling` now
+  carry `since: 10` (they ship in KiCad 10.0.0; were mislabelled 11).
+  `return_path` added to the constraint catalogue (KiCad 11 / master) so
+  completion and hover know it.
+
 ## [0.1.1] - 2026-10-25
 
 - Fix: the minimap no longer shows a large text label for nearly every line.
