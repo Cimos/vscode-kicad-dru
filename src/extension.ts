@@ -12,6 +12,14 @@ import {
 import { computeHover } from './hover';
 import { computeFoldingRanges } from './folding';
 import { computeDiagnostics, type Level } from './diagnostics';
+import {
+  REVIEW_URL,
+  applyChoice,
+  recordActivation,
+  shouldPrompt,
+  type RatingChoice,
+  type RatingState,
+} from './rating';
 
 /**
  * Extension entry point. The only `vscode`-coupled file.
@@ -59,6 +67,8 @@ function loadApi(context: vscode.ExtensionContext): { api: CompletionApi; data: 
 }
 
 export function activate(context: vscode.ExtensionContext): void {
+  registerRatingPrompt(context);
+
   // Folding needs no data payload, so register it before the fail-soft
   // api.json load below. Pure logic lives in `computeFoldingRanges`.
   context.subscriptions.push(
@@ -195,6 +205,48 @@ function registerDiagnostics(context: vscode.ExtensionContext, data: ApiData): v
     { dispose: () => timers.forEach((t) => clearTimeout(t)) },
   );
   vscode.workspace.textDocuments.forEach(validate);
+}
+
+const RATING_KEY = 'kicad-dru.rating';
+
+/**
+ * Rating toast adapter — policy lives in `src/rating.ts`. State is kept in
+ * `globalState` and synced, so "Don't ask again" follows the user across
+ * machines. The `kicad-dru.rate` command shows the same toast on demand
+ * (Command Palette: "KiCad DRU: Rate this extension"), which is also how the
+ * toast is smoke-tested without waiting out the quiet period.
+ */
+function registerRatingPrompt(context: vscode.ExtensionContext): void {
+  context.globalState.setKeysForSync([RATING_KEY]);
+  const read = (): RatingState | undefined => context.globalState.get<RatingState>(RATING_KEY);
+  const write = (s: RatingState): Thenable<void> => context.globalState.update(RATING_KEY, s);
+
+  const BUTTONS: Record<string, RatingChoice> = {
+    'Rate it': 'rate',
+    'Later': 'later',
+    "Don't ask again": 'never',
+  };
+
+  const show = async (): Promise<void> => {
+    const picked = await vscode.window.showInformationMessage(
+      'Enjoying KiCad Custom Design Rules? A quick rating on the Marketplace helps other KiCad users find it.',
+      ...Object.keys(BUTTONS),
+    );
+    const choice = picked ? BUTTONS[picked] : undefined;
+    const state = read() ?? recordActivation(undefined, Date.now());
+    await write(applyChoice(state, choice, Date.now()));
+    if (choice === 'rate') {
+      await vscode.env.openExternal(vscode.Uri.parse(REVIEW_URL));
+    }
+  };
+
+  context.subscriptions.push(vscode.commands.registerCommand('kicad-dru.rate', show));
+
+  const now = Date.now();
+  const state = recordActivation(read(), now);
+  void write(state).then(() => {
+    if (shouldPrompt(state, now)) void show();
+  });
 }
 
 export function deactivate(): void {

@@ -6,6 +6,12 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- A one-off "rate this extension" toast, shown only after five sessions
+  with a `.kicad_dru` file open and at least three days of use. "Later"
+  snoozes it for 30 days; "Don't ask again" (synced across machines) or
+  rating ends it for good. Command *KiCad DRU: Rate this extension* opens
+  the same toast on demand.
+
 ## [0.2.0] - 2026-10-25
 
 - Diagnostics (structural tier). Red squiggles + Problems entries for
