@@ -117,7 +117,8 @@ test('every catalogued constraint type is accepted', () => {
 test('unknown sub-form inside a constraint -> error; known ones pass', () => {
   assert.deepEqual(codes(V + '(rule "r" (constraint clearance (minimum 1mm)))'), ['unknown-keyword']);
   assert.deepEqual(diags(V + '(rule "r" (constraint skew (max 0.1mm) (within_diff_pairs)))'), []);
-  assert.deepEqual(diags(V + '(rule "r" (constraint return_path (layer "B.Cu") (net "GND")))'), []);
+  // return_path is KiCad 11 — the only diagnostic is the master-only warning.
+  assert.deepEqual(codes(V + '(rule "r" (constraint return_path (layer "B.Cu") (net "GND")))'), ['master-only-token']);
 });
 
 // ---- enum values ----
@@ -158,13 +159,79 @@ test('bare numbers on unitless constraints and units on length constraints -> no
   assert.deepEqual(diags(V + '(rule "r" (constraint via_count (max 2 + 2mm)))'), []);
 });
 
+// ---- Tier B: expression vocabulary (warnings) ----
+
+const cond = (expr) => V + `(rule "r" (condition "${expr}") (constraint clearance (min 1mm)))`;
+
+test('unknown property -> warning with the right range', () => {
+  const ds = diags(cond('A.Frobnicate == 1'));
+  assert.equal(ds.length, 1);
+  assert.equal(ds[0].severity, 'warning');
+  assert.equal(ds[0].code, 'unknown-property');
+  assert.deepEqual(ds[0].range, { start: { line: 1, col: 24 }, end: { line: 1, col: 34 } });
+});
+
+test('known properties (any case) and AB. receiver -> none', () => {
+  assert.deepEqual(diags(cond("A.NetClass == 'HV' && B.netclass == 'HV' && AB.Type == 'Via'")), []);
+});
+
+test('unknown function -> warning; known / spaced call -> none', () => {
+  assert.deepEqual(codes(cond("A.frobnicate('x')")), ['unknown-function']);
+  assert.deepEqual(diags(cond("A.intersectsArea('z') || B.intersectsArea ('z')")), []);
+});
+
+test('deprecated function alias -> deprecated-function warning', () => {
+  const ds = diags(cond("A.insideArea('z')"));
+  assert.deepEqual(ds.map((d) => [d.severity, d.code]), [['warning', 'deprecated-function']]);
+  assert.match(ds[0].message, /intersectsArea/);
+});
+
+test('members inside inner literals and the L receiver are not checked', () => {
+  assert.deepEqual(diags(cond("A.NetName == 'B.Frobnicate' && L.Anything == 1")), []);
+});
+
+test('assertion bodies are checked like conditions', () => {
+  assert.deepEqual(codes(V + '(rule "r" (constraint assertion "A.Frobnicate == 1"))'), ['unknown-property']);
+  assert.deepEqual(diags(V + '(rule "r" (constraint assertion "A.Hole == 0mm"))'), []);
+});
+
+test('master-only function and constraint -> master-only-token warnings, no errors', () => {
+  const ds = diags(V + '(rule "r" (condition "A.inNetChain(\'x\')") (constraint net_chain_length (max 10mm)))');
+  assert.deepEqual(ds.map((d) => [d.severity, d.code]), [
+    ['warning', 'master-only-token'],
+    ['warning', 'master-only-token'],
+  ]);
+  assert.match(ds[0].message, /not in KiCad 10\.0\.0/);
+});
+
+// ---- Tier B: layers (warnings) ----
+
+test('unknown bare layer -> warning; quoted / canonical / ranged / outer+inner -> none', () => {
+  const layer = (l) => V + `(rule "r" (layer ${l}) (constraint clearance (min 1mm)))`;
+  assert.deepEqual(codes(layer('F.Zorp')), ['unknown-layer']);
+  assert.deepEqual(diags(layer('"F.Zorp"')), []);
+  for (const ok of ['F.Cu', 'In3.Cu', 'In30.Cu', 'User.2', 'User.45', 'Edge.Cuts', 'outer', 'inner']) {
+    assert.deepEqual(diags(layer(ok)), [], ok);
+  }
+  assert.deepEqual(codes(layer('In31.Cu')), ['unknown-layer']);
+  assert.deepEqual(codes(layer('User.46')), ['unknown-layer']);
+  assert.match(diags(layer('f.cu'))[0].message, /did you mean 'F.Cu'/);
+});
+
+test('return_path (layer …) sub-clause is layer-checked too', () => {
+  assert.deepEqual(
+    codes(V + '(rule "r" (constraint return_path (layer B.Zorp) (net "GND")))'),
+    ['master-only-token', 'unknown-layer'],
+  );
+});
+
 // ---- level gating ----
 
-test('level=off -> nothing; level=errors / all -> errors kept', () => {
-  const bad = '(rule "r" (constraint frobnicate (min 1mm)))';
+test('level=off -> nothing; level=errors drops warnings; all keeps both', () => {
+  const bad = '(rule "r" (condition "A.Frobnicate == 1") (constraint frobnicate (min 1mm)))';
   assert.equal(diags(bad, 'off').length, 0);
-  assert.ok(diags(bad, 'errors').every((d) => d.severity === 'error'));
-  assert.equal(diags(bad, 'errors').length, diags(bad, 'all').length);
+  assert.deepEqual(diags(bad, 'errors').map((d) => d.code), ['missing-version', 'unknown-constraint']);
+  assert.deepEqual(diags(bad, 'all').map((d) => d.code), ['missing-version', 'unknown-property', 'unknown-constraint']);
 });
 
 test('a missing ) does not cascade into unknown-keyword on the following rules', () => {
@@ -182,13 +249,18 @@ test('diagnostics are sorted by position', () => {
 // ---- anti-false-positive corpus guard (load-bearing) ----
 
 const fixturesDir = join(here, '../fixtures');
-for (const f of readdirSync(fixturesDir).filter((n) => n.endsWith('.kicad_dru'))) {
-  test(`valid fixture ${f} produces no error-level diagnostics`, () => {
-    const text = readFileSync(join(fixturesDir, f), 'utf8');
-    const errs = diags(text, 'all').filter((d) => d.severity === 'error');
-    assert.deepEqual(errs, []);
+const KICAD11_FIXTURE = 'kicad11-master-netchain.kicad_dru';
+for (const f of readdirSync(fixturesDir).filter((n) => n.endsWith('.kicad_dru') && n !== KICAD11_FIXTURE)) {
+  test(`valid fixture ${f} produces no diagnostics at all`, () => {
+    assert.deepEqual(diags(readFileSync(join(fixturesDir, f), 'utf8'), 'all'), []);
   });
 }
+
+test(`${KICAD11_FIXTURE} yields only master-only-token warnings`, () => {
+  const ds = diags(readFileSync(join(fixturesDir, KICAD11_FIXTURE), 'utf8'), 'all');
+  assert.ok(ds.length >= 4, 'net_chain_length x2, stub_length, return_path, and the three functions');
+  assert.ok(ds.every((d) => d.severity === 'warning' && d.code === 'master-only-token'), JSON.stringify(ds));
+});
 
 test('every snippet body is diagnostic-free once placeholders are filled', () => {
   const snippets = JSON.parse(readFileSync(join(here, '../../snippets/kicad-dru.json'), 'utf8'));
@@ -203,7 +275,6 @@ test('every snippet body is diagnostic-free once placeholders are filled', () =>
       : /^\s*\(rule\b/.test(body)
         ? V + body
         : V + `(rule "snippet" ${body})`;
-    const errs = diags(text, 'all').filter((d) => d.severity === 'error');
-    assert.deepEqual(errs, [], `${name}:\n${text}`);
+    assert.deepEqual(diags(text, 'all'), [], `${name}:\n${text}`);
   }
 });
