@@ -9,8 +9,10 @@
  * per line, not per balanced s-expression.
  *
  * Instead, match parentheses properly: skip `"..."` strings (condition and
- * assertion bodies carry their own parens) and `#` line comments, and emit one
- * range per multi-line `( ... )` pair. No dependency on `vscode`; exercised by
+ * assertion bodies carry their own parens) and `#` comment lines, and emit one
+ * range per multi-line `( ... )` pair. As in KiCad's lexer (and the grammar),
+ * `#` starts a comment only as the first non-whitespace character of a line;
+ * a mid-line `#` is an ordinary token and parens after it still count. No dependency on `vscode`; exercised by
  * `tests/unit/folding.test.mjs` via `dist/folding.mjs`.
  */
 
@@ -27,22 +29,26 @@ export function computeFoldingRanges(text: string): FoldRange[] {
   let line = 0;
   let inString = false;
   let inComment = false;
+  let lineStart = true; // only whitespace seen so far on this line
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
     if (ch === '\n') {
       line++;
       inComment = false;
+      lineStart = !inString; // a string spanning lines isn't a fresh line
       continue;
     }
     if (inComment) continue;
+    const atLineStart = lineStart;
+    if (ch !== ' ' && ch !== '\t' && ch !== '\r') lineStart = false;
     if (inString) {
       if (ch === '\\') i++; // skip escaped char (never a newline in practice)
       else if (ch === '"') inString = false;
       continue;
     }
     if (ch === '"') inString = true;
-    else if (ch === '#') inComment = true;
+    else if (ch === '#' && atLineStart) inComment = true;
     else if (ch === '(') open.push(line);
     else if (ch === ')') {
       const start = open.pop();

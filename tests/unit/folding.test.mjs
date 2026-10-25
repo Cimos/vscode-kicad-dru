@@ -44,13 +44,20 @@ test('parens inside double-quoted strings are ignored', () => {
   assert.deepEqual(r, [{ start: 0, end: 1 }]);
 });
 
-test('parens inside # comments are ignored', () => {
+test('parens on line-start # comment lines are ignored (indented too)', () => {
   const r = fold([
     '# see (https://example.com',
-    '(rule "x"   # trailing ) comment',
+    '(rule "x"',
+    '  # (commented-out constraint',
     '  (constraint clearance (min 1mm)))',
   ]);
-  assert.deepEqual(r, [{ start: 1, end: 2 }]);
+  assert.deepEqual(r, [{ start: 1, end: 3 }]);
+});
+
+test('a mid-line # is not a comment: parens after it still count', () => {
+  // KiCad only treats # as a comment when it is the first non-blank char.
+  const r = fold(['(rule "x" # note', '  (constraint clearance (min 1mm)))']);
+  assert.deepEqual(r, [{ start: 0, end: 1 }]);
 });
 
 test('# inside a string is not a comment', () => {

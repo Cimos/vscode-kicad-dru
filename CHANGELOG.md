@@ -10,6 +10,8 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
   The language configuration's `(`/`)` folding markers were being rendered
   as minimap region headers. Folding now matches balanced parentheses
   (ignoring strings and `#` comments), one fold per multi-line s-expression.
+- Fix: folding treats `#` as a comment only when it starts the line (after
+  optional whitespace), matching KiCad's lexer and the grammar.
 
 ## [0.1.0] - 2026-06-24
 
