@@ -44,12 +44,15 @@ KiCad 10.
 ## What this extension does *not* do
 
 - It is not a full validator. Diagnostics flag only definite structural
-  mistakes (unbalanced parentheses, a missing `(version 1)` header, unknown
-  constraint types or keywords, bad `severity` / `disallow` /
-  `zone_connection` values, units on unitless constraints). KiCad's own
-  *Check Rule Syntax* button remains the source of truth for whether a rule
-  is valid. Tune or disable with the `kicad-dru.diagnostics` setting
-  (`all` / `errors` / `off`).
+  mistakes as errors (unbalanced parentheses, a missing `(version 1)`
+  header, unknown constraint types or keywords, bad `severity` /
+  `disallow` / `zone_connection` values, units on unitless constraints),
+  and vocabulary misses as warnings (an `A.`/`B.` property or function the
+  catalogue doesn't know, a deprecated alias, a non-canonical bare layer
+  name, a KiCad 11 / master-only token). KiCad's own *Check Rule Syntax*
+  button remains the source of truth for whether a rule is valid. Tune or
+  disable with the `kicad-dru.diagnostics` setting (`all` / `errors` /
+  `off`).
 - It does not parse `.kicad_pcb`, `.kicad_sch`, `.kicad_sym`, or any other
   KiCad file. Those have other extensions (`DanielMeza.kicad-syntax-
   highlighter` covers most of them; `oaslananka.kicadstudio` covers KiCad

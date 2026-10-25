@@ -16,6 +16,15 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
   `solder_paste_rel_margin`). New setting `kicad-dru.diagnostics`
   (`all` | `errors` | `off`, default `all`). Every shipped fixture and
   snippet is asserted diagnostic-free in CI.
+- Diagnostics (vocabulary tier, warnings). Inside `(condition "…")` /
+  `(constraint assertion "…")`: an `A.`/`B.`/`AB.` property or function
+  not in the catalogue (`unknown-property`, `unknown-function`) and the
+  deprecated `inside*` / `memberOf` aliases (`deprecated-function`). A
+  bare `(layer …)` token that is not a canonical layer name
+  (`unknown-layer`; quoted names are left alone). Constraints, functions
+  and properties newer than the audited KiCad 10.0.0 — the net-chain
+  family — get `master-only-token`. Inner `'…'` literals and the `L`
+  receiver are never checked.
 - Data: `bridged_mask`, `solder_mask_expansion`, `solder_mask_sliver`,
   `solder_paste_abs_margin`, `solder_paste_rel_margin`, `via_dangling` now
   carry `since: 10` (they ship in KiCad 10.0.0; were mislabelled 11).

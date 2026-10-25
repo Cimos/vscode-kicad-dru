@@ -89,7 +89,7 @@
           "enumDescriptions": [
             "No diagnostics.",
             "Structural errors only (unbalanced parens, unknown constraint types, bad enum values, units on unitless constraints).",
-            "Errors plus warnings."
+            "Errors plus warnings (unknown A./B. properties or functions, deprecated aliases, non-canonical bare layer names, KiCad 11 / master-only tokens)."
           ],
           "default": "all",
           "description": "Diagnostics for .kicad_dru files. Only definite mistakes are flagged; KiCad's Check Rule Syntax remains the authority."
