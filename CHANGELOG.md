@@ -6,6 +6,8 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-25
+
 - Diagnostics (structural tier). Red squiggles + Problems entries for
   definite mistakes only: unbalanced parentheses, unterminated strings,
   missing / duplicate / non-integer `(version …)` header, unknown top-level

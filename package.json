@@ -1,8 +1,8 @@
 {
   "name": "kicad-dru",
   "displayName": "KiCad Custom Design Rules",
-  "description": "Syntax highlighting and snippets for KiCad Custom Design Rules (.kicad_dru) files.",
-  "version": "0.1.1",
+  "description": "Syntax highlighting, snippets, IntelliSense, hover help and diagnostics for KiCad Custom Design Rules (.kicad_dru) files.",
+  "version": "0.2.0",
   "publisher": "cimos",
   "license": "MIT",
   "icon": "images/D1_256.png",
@@ -85,7 +85,11 @@
       "properties": {
         "kicad-dru.diagnostics": {
           "type": "string",
-          "enum": ["off", "errors", "all"],
+          "enum": [
+            "off",
+            "errors",
+            "all"
+          ],
           "enumDescriptions": [
             "No diagnostics.",
             "Structural errors only (unbalanced parens, unknown constraint types, bad enum values, units on unitless constraints).",
