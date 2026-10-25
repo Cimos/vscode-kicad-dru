@@ -15,11 +15,7 @@
     "surroundingPairs": [
         ["(", ")"],
         ["\"", "\""],
-    ],
-    "folding": {
-        "markers": {
-            "start": "\\(",
-            "end": "\\)"
-        }
-    }
+    ]
+    // No "folding.markers": paren folding is a FoldingRangeProvider
+    // (src/folding.ts). Markers are rendered as minimap section headers.
 }

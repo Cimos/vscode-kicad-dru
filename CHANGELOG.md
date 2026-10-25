@@ -6,6 +6,11 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Fix: the minimap no longer shows a large text label for nearly every line.
+  The language configuration's `(`/`)` folding markers were being rendered
+  as minimap region headers. Folding now matches balanced parentheses
+  (ignoring strings and `#` comments), one fold per multi-line s-expression.
+
 ## [0.1.0] - 2026-06-24
 
 - IntelliSense completion. Inside `(condition "…")` / `(constraint
