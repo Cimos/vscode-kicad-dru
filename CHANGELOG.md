@@ -6,6 +6,43 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-25
+
+- **Quick fixes.** Diagnostics now suggest the intended word for typos as
+  well as mis-casing (`clearence` → "did you mean `clearance`?"), and
+  <kbd>Ctrl</kbd>+<kbd>.</kbd> applies it. Also: strip a unit from a
+  unitless value, add a missing `(version 1)`, replace a deprecated
+  function with its successor.
+- **Outline / Go to Symbol.** Each rule is a symbol named after the rule,
+  with its clauses as children.
+- **Format Document.** One clause per line, consistent indentation,
+  comments preserved; string contents are never changed and files with
+  syntax errors are left untouched.
+- **Browser support.** Runs on vscode.dev and github.dev; `data/api.json`
+  is now bundled into the extension.
+- **New diagnostics**, each verified against the KiCad 10.0.0 parser:
+  duplicate constraint type in one rule (error), a second `(layer …)`
+  clause (error), a second `(condition …)` / `(severity …)` that silently
+  replaces the first (warning), `within_diff_pairs` outside `skew` (error),
+  `AB.Type` / `AB.NetClass` / `AB.NetName` / `AB.ComponentClass` (error),
+  and an `A.Type == '…'` comparison against a value that doesn't exist
+  (warning).
+- **Fix: false positives in v0.2.x.** `solder_paste_rel_margin` values
+  are no longer unit-checked (KiCad parses them as lengths). Layer names
+  KiCad accepts but the catalogue lacked — `F.Silkscreen`, `B.Courtyard`,
+  `User.Drawings` and the other standard names, glob patterns, and
+  user-renamed layers — are no longer warned about; an unrecognised layer is
+  only flagged when it is a likely typo of a known one.
+- **Fix:** accepting a value containing a space in completion (`Text Box`)
+  no longer leaves the typed prefix behind.
+- **Data re-audited against the KiCad 10.0.0 source:** `Bitmap` →
+  `Reference Image` and six missing `A.Type` values added; 23 missing
+  properties added (table, barcode, reference-image, shape colours);
+  `Priority` removed (gone in 10.0.0); 36 `since` corrections (e.g.
+  `Pad_To_Die_Delay`, the backdrill / post-machining family and
+  `isBlindVia` are KiCad 10, not 9).
+- Open VSX publishing via trusted publishing (GitHub OIDC, no stored token).
+
 ## [0.2.1] - 2026-10-25
 
 - A one-off "rate this extension" toast, shown only after five sessions

@@ -613,18 +613,17 @@ export function valueLiteralContext(
 
 /**
  * Place value entries inside an inner `'...'` literal: the replace range covers
- * the partial already typed inside the quotes (letters / digits / `.` / `_`).
+ * everything typed since the literal's opening quote. Values can contain
+ * spaces (`Text Box`), so a word-character partial would leave `'Text ` behind
+ * and accepting the item would produce `'Text Text Box`.
  */
 function placeValues(
   entries: Omit<CompletionEntry, 'replace'>[],
   lineText: string,
   pos: number,
 ): CompletionEntry[] {
-  // Non-optional, right-anchored so it matches once and fails fast (the old
-  // optional-group-at-$ form was O(n^2) on long lines, on the keystroke path).
-  const m = /[A-Za-z0-9_.]+$/.exec(lineText.slice(0, pos));
-  const partial = m ? m[0] : '';
-  const start = pos - partial.length;
+  // Callers only reach here inside an inner literal, so an opening `'` exists.
+  const start = lineText.lastIndexOf("'", pos - 1) + 1;
   return entries.map((e) => ({ ...e, replace: { start, end: pos } }));
 }
 

@@ -148,6 +148,16 @@ test('value completion replace range covers the typed partial', () => {
   assert.equal(entries[0].replace.end - entries[0].replace.start, 2);
 });
 
+test('value replace range spans a partial containing a space (Text Box)', () => {
+  const line = "(condition \"A.Type == 'Text B|'\");";
+  const entries = complete(line);
+  const tb = entries.find((e) => e.label === 'Text Box');
+  assert.ok(tb, 'Text Box offered');
+  // replace covers `Text B` (6 chars) starting right after the opening quote
+  assert.equal(tb.replace.end - tb.replace.start, 6);
+  assert.equal(line.replace('|', '')[tb.replace.start - 1], "'");
+});
+
 test('non-layer fn arg offers nothing (scope discipline)', () => {
   assert.deepEqual(complete("(condition \"A.intersectsArea('|')\");"), []);
 });
@@ -174,5 +184,5 @@ test('since-tagged property carries a since note in its doc', () => {
   const entries = complete('(condition "A.|");');
   const e = entries.find((x) => x.label === 'Pad_To_Die_Delay');
   assert.ok(e, 'Pad_To_Die_Delay offered');
-  assert.match(e.doc, /Since KiCad 9/i);
+  assert.match(e.doc, /Since KiCad 10/i); // not registered at the 9.0.0 tag
 });

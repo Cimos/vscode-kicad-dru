@@ -4,8 +4,13 @@
 
 # KiCad Custom Design Rules — VS Code extension
 
-Syntax highlighting and snippets for KiCad **Custom Design Rule** files
-(`.kicad_dru`) in Visual Studio Code.
+Syntax highlighting, completion, hover help, diagnostics with quick fixes,
+an outline and a formatter for KiCad **Custom Design Rule** files
+(`.kicad_dru`) in Visual Studio Code — desktop, vscode.dev and github.dev.
+
+![A .kicad_dru file with a typo underlined and a "Change to 'clearance'" quick fix](images/screenshot-diagnostics.png)
+
+<sub>Rendered from the extension's own grammar and diagnostics engine.</sub>
 
 KiCad ships a single-line textbox in *Board Setup → Custom Rules* and a
 *Check Rule Syntax* button. That works for one-liners. For real rule sets
@@ -35,24 +40,39 @@ string literals. This extension adds that for `.kicad_dru` specifically.
 - **Hover help**. Hover a constraint type, property, function, layer,
   severity, or disallow category to see what it is, its argument/type, and a
   one-line description.
+- **Diagnostics with quick fixes**. Definite mistakes are underlined as you
+  type — a misspelled constraint type, keyword, layer, property or function
+  ("did you mean `clearance`?"), a unit on a unitless constraint, a second
+  constraint of the same type in one rule, a missing `(version 1)`. Press
+  <kbd>Ctrl</kbd>+<kbd>.</kbd> to apply the fix.
+- **Outline and Go to Symbol**. Every rule appears in the Outline panel and
+  breadcrumbs with its clauses; <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>O</kbd>
+  jumps to a rule by name.
+- **Format Document** (<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F</kbd>). One
+  clause per line under each rule, consistent indentation, comments kept in
+  place. String contents are never touched, and a file with a syntax error is
+  left as-is.
 - **Editor niceties**: `#` line comment toggling, paren matching, folding
-  on each top-level `(rule …)` block, auto-closing pairs.
+  on each multi-line `( … )` block, auto-closing pairs.
+- **Works in the browser**: vscode.dev and github.dev, not just desktop.
 
-Completion and hover are backed by a single `data/api.json` audited against
-KiCad 10.
+Completion, hover and diagnostics are backed by a single `data/api.json`
+audited against the KiCad 10.0.0 source.
 
 ## What this extension does *not* do
 
-- It is not a full validator. Diagnostics flag only definite structural
-  mistakes as errors (unbalanced parentheses, a missing `(version 1)`
+- It is not a full validator. Diagnostics flag only what KiCad definitely
+  rejects as errors (unbalanced parentheses, a missing `(version 1)`
   header, unknown constraint types or keywords, bad `severity` /
-  `disallow` / `zone_connection` values, units on unitless constraints),
-  and vocabulary misses as warnings (an `A.`/`B.` property or function the
-  catalogue doesn't know, a deprecated alias, a non-canonical bare layer
-  name, a KiCad 11 / master-only token). KiCad's own *Check Rule Syntax*
-  button remains the source of truth for whether a rule is valid. Tune or
-  disable with the `kicad-dru.diagnostics` setting (`all` / `errors` /
-  `off`).
+  `disallow` / `zone_connection` values, units on unitless constraints,
+  duplicate constraints or `(layer …)` clauses in one rule), and likely
+  mistakes as warnings (an `A.`/`B.` property or function the catalogue
+  doesn't know, a deprecated alias, a misspelled layer name, an `A.Type`
+  comparison that can never match, a KiCad 11 / master-only token). When
+  unsure it stays silent — renamed layers, for instance, are never flagged.
+  KiCad's own *Check Rule Syntax* button remains the source of truth for
+  whether a rule is valid. Tune or disable with the `kicad-dru.diagnostics`
+  setting (`all` / `errors` / `off`).
 - It does not parse `.kicad_pcb`, `.kicad_sch`, `.kicad_sym`, or any other
   KiCad file. Those have other extensions (`DanielMeza.kicad-syntax-
   highlighter` covers most of them; `oaslananka.kicadstudio` covers KiCad
@@ -69,7 +89,9 @@ From the VS Code Marketplace:
 ext install cimos.kicad-dru
 ```
 
-Or search for **"KiCad Custom Design Rules"** in the Extensions view.
+Or search for **"KiCad Custom Design Rules"** in the Extensions view. Users of
+VSCodium, Cursor and other Open VSX-based editors can install it from
+[Open VSX](https://open-vsx.org/extension/cimos/kicad-dru).
 
 A `.vsix` is also attached to each GitHub release if you prefer manual
 installation:

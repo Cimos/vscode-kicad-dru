@@ -143,11 +143,15 @@ test('bad zone_connection -> bad-enum', () => {
 
 // ---- unit on unitless ----
 
-test('unit on track_angle / via_count / min_resolved_spokes / rel_margin -> error', () => {
+test('unit on track_angle / via_count / min_resolved_spokes -> error', () => {
   assert.deepEqual(codes(V + '(rule "r" (constraint track_angle (min 90deg)))'), ['unit-on-unitless']);
   assert.deepEqual(codes(V + '(rule "r" (constraint via_count (max 4mm)))'), ['unit-on-unitless']);
   assert.deepEqual(codes(V + '(rule "r" (constraint min_resolved_spokes 2mm))'), ['unit-on-unitless']);
-  assert.deepEqual(codes(V + '(rule "r" (constraint solder_paste_rel_margin (opt -0.1mm)))'), ['unit-on-unitless']);
+});
+
+test('solder_paste_rel_margin is never unit-checked (KiCad parses it as a length; intent unclear)', () => {
+  assert.deepEqual(diags(V + '(rule "r" (constraint solder_paste_rel_margin (opt -0.1mm)))'), []);
+  assert.deepEqual(diags(V + '(rule "r" (constraint solder_paste_rel_margin (opt -0.1)))'), []);
 });
 
 test('bare numbers on unitless constraints and units on length constraints -> none', () => {
@@ -172,7 +176,7 @@ test('unknown property -> warning with the right range', () => {
 });
 
 test('known properties (any case) and AB. receiver -> none', () => {
-  assert.deepEqual(diags(cond("A.NetClass == 'HV' && B.netclass == 'HV' && AB.Type == 'Via'")), []);
+  assert.deepEqual(diags(cond("A.NetClass == 'HV' && B.netclass == 'HV' && AB.Width > 1mm")), []);
 });
 
 test('unknown function -> warning; known / spaced call -> none', () => {
@@ -206,23 +210,157 @@ test('master-only function and constraint -> master-only-token warnings, no erro
 
 // ---- Tier B: layers (warnings) ----
 
-test('unknown bare layer -> warning; quoted / canonical / ranged / outer+inner -> none', () => {
-  const layer = (l) => V + `(rule "r" (layer ${l}) (constraint clearance (min 1mm)))`;
-  assert.deepEqual(codes(layer('F.Zorp')), ['unknown-layer']);
-  assert.deepEqual(diags(layer('"F.Zorp"')), []);
-  for (const ok of ['F.Cu', 'In3.Cu', 'In30.Cu', 'User.2', 'User.45', 'Edge.Cuts', 'outer', 'inner']) {
-    assert.deepEqual(diags(layer(ok)), [], ok);
-  }
-  assert.deepEqual(codes(layer('In31.Cu')), ['unknown-layer']);
-  assert.deepEqual(codes(layer('User.46')), ['unknown-layer']);
+const layer = (l) => V + `(rule "r" (layer ${l}) (constraint clearance (min 1mm)))`;
+
+test('layer typos and mis-casing -> warning with a fix', () => {
+  assert.deepEqual(codes(layer('F.Cuu')), ['unknown-layer']);
+  assert.deepEqual(codes(layer('B.Mask2')), ['unknown-layer']);
+  // In31.Cu is one edit from both In1.Cu and In30.Cu: ambiguous, so silent.
+  assert.deepEqual(diags(layer('In31.Cu')), []);
   assert.match(diags(layer('f.cu'))[0].message, /did you mean 'F.Cu'/);
+  assert.match(diags(layer('F.Silkscren'))[0].message, /Did you mean 'F.Silkscreen'/);
+});
+
+test('never flagged: canonical, ranged, standard names, outer/inner, quoted, globs, unrecognisable (maybe renamed)', () => {
+  const ok = [
+    'F.Cu', 'In3.Cu', 'In30.Cu', 'User.2', 'User.45', 'Edge.Cuts', 'outer', 'inner',
+    'F.Silkscreen', 'B.Courtyard', 'User.Drawings', 'User.Eco2', 'Rescue',
+    '"F.Zorp"', '*.Cu', 'F.*', '?.Mask',
+    'F.Zorp', 'GND_Plane', 'User.46',
+  ];
+  for (const l of ok) assert.deepEqual(diags(layer(l)), [], l);
 });
 
 test('return_path (layer …) sub-clause is layer-checked too', () => {
   assert.deepEqual(
-    codes(V + '(rule "r" (constraint return_path (layer B.Zorp) (net "GND")))'),
+    codes(V + '(rule "r" (constraint return_path (layer B.Cuu) (net "GND")))'),
     ['master-only-token', 'unknown-layer'],
   );
+});
+
+// ---- verified KiCad 10.0.0 rule-structure checks ----
+
+test('two constraints of the same type in one rule -> duplicate-constraint error on the second', () => {
+  const ds = diags(V + '(rule "r"\n  (constraint clearance (min 1mm))\n  (constraint clearance (min 2mm)))');
+  assert.deepEqual(ds.map((d) => [d.severity, d.code]), [['error', 'duplicate-constraint']]);
+  assert.equal(ds[0].range.start.line, 3);
+});
+
+test('two (layer …) clauses -> error; second condition / severity -> overridden warning', () => {
+  assert.deepEqual(codes(V + '(rule "r" (layer F.Cu) (layer B.Cu) (constraint clearance (min 1mm)))'), ['duplicate-layer']);
+  const ds = diags(V + '(rule "r" (condition "A.Type == \'Via\'") (severity error) (condition "A.Type == \'Pad\'") (severity warning) (constraint clearance (min 1mm)))');
+  assert.deepEqual(ds.map((d) => [d.severity, d.code]), [['warning', 'overridden-clause'], ['warning', 'overridden-clause']]);
+});
+
+test('same rule name twice is allowed (KiCad does not check names)', () => {
+  assert.deepEqual(diags(V + '(rule "r" (constraint clearance (min 1mm)))\n(rule "r" (constraint track_width (min 1mm)))'), []);
+});
+
+test('within_diff_pairs outside skew -> error; inside skew -> fine', () => {
+  assert.deepEqual(codes(V + '(rule "r" (constraint length (max 10mm) (within_diff_pairs)))'), ['unknown-keyword']);
+  assert.deepEqual(diags(V + '(rule "r" (constraint skew (max 1mm) (within_diff_pairs)))'), []);
+});
+
+test('AB.Type / AB.NetClass / AB.NetName / AB.ComponentClass -> error; A./B. fine', () => {
+  for (const p of ['Type', 'NetClass', 'NetName', 'ComponentClass']) {
+    assert.deepEqual(codes(cond(`AB.${p} == 'x'`)), ['ab-unsupported'], p);
+  }
+  assert.deepEqual(diags(cond("A.NetClass == 'x' && B.NetName == 'y'")), []);
+});
+
+test("A.Type == 'unknown' -> warning (always false); case, globs and known values fine", () => {
+  const ds = diags(cond("A.Type == 'Viaa'"));
+  assert.deepEqual(ds.map((d) => [d.severity, d.code]), [['warning', 'unknown-type-value']]);
+  assert.match(ds[0].message, /always false\. Did you mean 'Via'\?/);
+  assert.deepEqual(ds[0].range, { start: { line: 1, col: 33 }, end: { line: 1, col: 37 } }); // the text inside the quotes
+  assert.match(diags(cond("A.Type != 'Nope'"))[0].message, /always true/);
+  for (const ok of ["A.Type == 'via'", "A.Type == 'Text Box'", "A.Type == 'Reference Image'", "B.Type != 'T*'", "A.Type == 'Table Cell'"]) {
+    assert.deepEqual(diags(cond(ok)), [], ok);
+  }
+});
+
+// ---- quick fixes + typo suggestions ----
+
+/** Apply a diagnostic's fix to the text (single-line edits only, enough here). */
+function applyFix(text, d) {
+  const lines = text.split('\n');
+  for (const e of [...d.fix.edits].reverse()) {
+    const { start, end } = e.range;
+    if (start.line === end.line) {
+      const l = lines[start.line];
+      lines[start.line] = l.slice(0, start.col) + e.newText + l.slice(end.col);
+    }
+  }
+  return lines.join('\n');
+}
+
+const firstFix = (text) => diags(text).find((d) => d.fix);
+
+test('typo in a constraint type -> suggestion + fix that clears the diagnostic', () => {
+  const t = V + '(rule "r" (constraint clearence (min 1mm)))';
+  const d = firstFix(t);
+  assert.equal(d.code, 'unknown-constraint');
+  assert.match(d.message, /Did you mean 'clearance'\?/);
+  assert.equal(d.fix.title, "Change to 'clearance'");
+  assert.deepEqual(diags(applyFix(t, d)), []);
+});
+
+test('case-only miss keeps the case-sensitive wording and fixes', () => {
+  const t = V + '(rule "r" (constraint Clearance (min 1mm)))';
+  const d = firstFix(t);
+  assert.match(d.message, /case-sensitive; did you mean 'clearance'/);
+  assert.deepEqual(diags(applyFix(t, d)), []);
+});
+
+test('typos in keywords, enums, sub-forms, layers, properties, functions all fix cleanly', () => {
+  const cases = [
+    V + '(rule "r" (condtion "A.Type == \'Via\'") (constraint clearance (min 1mm)))',
+    V + '(rul "r" (constraint clearance (min 1mm)))',
+    V + '(rule "r" (severity warnign) (constraint clearance (min 1mm)))',
+    V + '(rule "r" (constraint disallow trak))',
+    V + '(rule "r" (constraint zone_connection soild))',
+    V + '(rule "r" (constraint clearance (mni 1mm)))',
+    V + '(rule "r" (layer F.Cuu) (constraint clearance (min 1mm)))',
+    cond('A.NetClas == 1'),
+    cond("A.intersectArea('z')"),
+  ];
+  for (const t of cases) {
+    const d = firstFix(t);
+    assert.ok(d, `a fix is offered for:\n${t}`);
+    assert.deepEqual(diags(applyFix(t, d)), [], `fix clears everything for:\n${t}`);
+  }
+});
+
+test('no suggestion when nothing is close or when it is ambiguous', () => {
+  const d = diags(V + '(rule "r" (constraint frobnicate (min 1mm)))')[0];
+  assert.equal(d.fix, undefined);
+  assert.doesNotMatch(d.message, /did you mean/i);
+  // 'via' is 1 edit from both 'vias'? not a candidate; 'pod' is 1 edit from 'pad' only -> fix
+  // two equally close candidates -> no fix: 'tex' is 1 from 'text' only, so use 'trac' (track) vs none
+  const amb = diags(V + '(rule "r" (constraint disallow hol))')[0]; // hole only
+  assert.ok(amb.fix);
+});
+
+test('unit-on-unitless offers to strip the unit', () => {
+  const t = V + '(rule "r" (constraint track_angle (min 90deg)))';
+  const d = firstFix(t);
+  assert.equal(d.fix.title, "Change to '90'");
+  assert.deepEqual(diags(applyFix(t, d)), []);
+});
+
+test('deprecated alias offers its replacement', () => {
+  const t = cond("A.insideCourtyard('U1')");
+  const d = firstFix(t);
+  assert.equal(d.fix.title, "Change to 'intersectsCourtyard'");
+  assert.deepEqual(diags(applyFix(t, d)), []);
+});
+
+test('missing version offers to insert it before the first form, after leading comments', () => {
+  const t = '# header\n(rule "r" (constraint clearance (min 1mm)))';
+  const d = diags(t).find((x) => x.code === 'missing-version');
+  assert.deepEqual(d.fix.edits[0].range, { start: { line: 1, col: 0 }, end: { line: 1, col: 0 } });
+  const fixed = '# header\n' + d.fix.edits[0].newText + '(rule "r" (constraint clearance (min 1mm)))';
+  assert.deepEqual(diags(fixed), []);
 });
 
 // ---- level gating ----

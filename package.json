@@ -1,8 +1,8 @@
 {
   "name": "kicad-dru",
   "displayName": "KiCad Custom Design Rules",
-  "description": "Syntax highlighting, snippets, IntelliSense, hover help and diagnostics for KiCad Custom Design Rules (.kicad_dru) files.",
-  "version": "0.2.1",
+  "description": "Syntax highlighting, IntelliSense, hover help, diagnostics with quick fixes, outline and formatter for KiCad Custom Design Rules (.kicad_dru) files.",
+  "version": "0.3.0",
   "publisher": "cimos",
   "license": "MIT",
   "icon": "images/D1_256.png",
@@ -19,9 +19,12 @@
   },
   "categories": [
     "Programming Languages",
-    "Snippets"
+    "Snippets",
+    "Linters",
+    "Formatters"
   ],
   "main": "./dist/extension.js",
+  "browser": "./dist/web/extension.js",
   "activationEvents": [
     "onLanguage:kicad-dru"
   ],

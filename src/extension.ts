@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
+import apiJson from '../data/api.json';
 import {
   buildApi,
   computeCompletions,
@@ -11,7 +10,9 @@ import {
 } from './completion';
 import { computeHover } from './hover';
 import { computeFoldingRanges } from './folding';
-import { computeDiagnostics, type Level } from './diagnostics';
+import { computeDiagnostics, type Diag, type Level } from './diagnostics';
+import { computeSymbols, type DruSymbol, type SymbolKind } from './symbols';
+import { formatDocument } from './format';
 import {
   REVIEW_URL,
   applyChoice,
@@ -24,12 +25,13 @@ import {
 /**
  * Extension entry point. The only `vscode`-coupled file.
  *
- * On activation (`onLanguage:kicad-dru`) it loads `data/api.json` once,
- * builds the injected {@link CompletionApi}, and registers a
- * CompletionItemProvider. All decision-making lives in the pure
- * `computeCompletions` (see `src/completion.ts`); this adapter only supplies
- * the physical line text + cursor column and maps results to
- * `vscode.CompletionItem`s.
+ * `data/api.json` is bundled into this file by esbuild (no filesystem access),
+ * so the same build runs on desktop and in the browser (vscode.dev /
+ * github.dev). On activation (`onLanguage:kicad-dru`) it builds the injected
+ * {@link CompletionApi} and registers the providers. All decision-making lives
+ * in the pure modules (`completion`, `hover`, `diagnostics`, `symbols`,
+ * `format`, `folding`, `rating`); this adapter only supplies document text /
+ * positions and maps results onto `vscode` types.
  */
 
 const KIND_MAP: Record<EntryKind, vscode.CompletionItemKind> = {
@@ -57,40 +59,58 @@ function toItem(e: CompletionEntry, lineNumber: number): vscode.CompletionItem {
   return item;
 }
 
-function loadApi(context: vscode.ExtensionContext): { api: CompletionApi; data: ApiData } {
-  const apiPath = path.join(context.extensionPath, 'data', 'api.json');
-  const raw = fs.readFileSync(apiPath, 'utf8');
-  const data = JSON.parse(raw) as ApiData;
-  // `api` powers completion; the raw `data` powers hover (which reads the
-  // property/function/vocab lists directly). Loaded once, shared by both.
-  return { api: buildApi(data), data };
+const SYMBOL_KIND: Record<SymbolKind, vscode.SymbolKind> = {
+  version: vscode.SymbolKind.Number,
+  rule: vscode.SymbolKind.Class,
+  constraint: vscode.SymbolKind.Property,
+  condition: vscode.SymbolKind.Boolean,
+  layer: vscode.SymbolKind.Enum,
+  severity: vscode.SymbolKind.EnumMember,
+};
+
+const toRange = (r: { start: { line: number; col: number }; end: { line: number; col: number } }): vscode.Range =>
+  new vscode.Range(r.start.line, r.start.col, r.end.line, r.end.col);
+
+function toSymbol(s: DruSymbol): vscode.DocumentSymbol {
+  const sym = new vscode.DocumentSymbol(s.name, s.detail, SYMBOL_KIND[s.kind], toRange(s.range), toRange(s.selectionRange));
+  sym.children = s.children.map(toSymbol);
+  return sym;
 }
 
 export function activate(context: vscode.ExtensionContext): void {
   registerRatingPrompt(context);
 
-  // Folding needs no data payload, so register it before the fail-soft
-  // api.json load below. Pure logic lives in `computeFoldingRanges`.
+  const selector: vscode.DocumentSelector = { language: 'kicad-dru' };
   context.subscriptions.push(
-    vscode.languages.registerFoldingRangeProvider({ language: 'kicad-dru' }, {
+    vscode.languages.registerFoldingRangeProvider(selector, {
       provideFoldingRanges(document) {
         return computeFoldingRanges(document.getText()).map(
           (r) => new vscode.FoldingRange(r.start, r.end),
         );
       },
     }),
+    // Outline panel, breadcrumbs, Go to Symbol (Ctrl+Shift+O).
+    vscode.languages.registerDocumentSymbolProvider(selector, {
+      provideDocumentSymbols(document) {
+        return computeSymbols(document.getText()).map(toSymbol);
+      },
+    }),
+    // Format Document. A file with parse errors comes back unchanged.
+    vscode.languages.registerDocumentFormattingEditProvider(selector, {
+      provideDocumentFormattingEdits(document, options) {
+        const text = document.getText();
+        const formatted = formatDocument(text, { tabSize: options.tabSize, insertSpaces: options.insertSpaces });
+        if (formatted === text) return [];
+        const all = new vscode.Range(document.positionAt(0), document.positionAt(text.length));
+        return [vscode.TextEdit.replace(all, formatted)];
+      },
+    }),
   );
 
-  let api: CompletionApi;
-  let data: ApiData;
-  try {
-    ({ api, data } = loadApi(context));
-  } catch (err) {
-    // If the data payload is missing/corrupt, fail soft: the grammar and
-    // snippets still work; completion simply offers nothing.
-    console.error('[kicad-dru] failed to load data/api.json:', err);
-    return;
-  }
+  // `api` powers completion; the raw `data` powers hover and diagnostics
+  // (which read the property/function/vocab lists directly).
+  const data = apiJson as unknown as ApiData;
+  const api: CompletionApi = buildApi(data);
 
   const provider: vscode.CompletionItemProvider = {
     provideCompletionItems(document, position) {
@@ -165,17 +185,44 @@ function registerDiagnostics(context: vscode.ExtensionContext, data: ApiData): v
   const level = (): Level =>
     vscode.workspace.getConfiguration('kicad-dru').get<Level>('diagnostics', 'all');
 
+  // The quick fix travels with the diagnostic object VS Code hands back to the
+  // code-action provider, so nothing is recomputed when the lightbulb opens.
+  const fixes = new WeakMap<vscode.Diagnostic, NonNullable<Diag['fix']>>();
+
   const validate = (doc: vscode.TextDocument): void => {
     if (doc.languageId !== 'kicad-dru') return;
     const items = computeDiagnostics(doc.getText(), data, level()).map((d) => {
-      const range = new vscode.Range(d.range.start.line, d.range.start.col, d.range.end.line, d.range.end.col);
-      const item = new vscode.Diagnostic(range, d.message, SEVERITY[d.severity]);
+      const item = new vscode.Diagnostic(toRange(d.range), d.message, SEVERITY[d.severity]);
       item.source = 'kicad-dru';
       item.code = d.code;
+      if (d.fix) fixes.set(item, d.fix);
       return item;
     });
     collection.set(doc.uri, items);
   };
+
+  context.subscriptions.push(
+    vscode.languages.registerCodeActionsProvider(
+      { language: 'kicad-dru' },
+      {
+        provideCodeActions(document, _range, ctx) {
+          const actions: vscode.CodeAction[] = [];
+          for (const diag of ctx.diagnostics) {
+            const fix = fixes.get(diag);
+            if (!fix) continue;
+            const action = new vscode.CodeAction(fix.title, vscode.CodeActionKind.QuickFix);
+            action.edit = new vscode.WorkspaceEdit();
+            for (const e of fix.edits) action.edit.replace(document.uri, toRange(e.range), e.newText);
+            action.diagnostics = [diag];
+            action.isPreferred = true;
+            actions.push(action);
+          }
+          return actions;
+        },
+      },
+      { providedCodeActionKinds: [vscode.CodeActionKind.QuickFix] },
+    ),
+  );
 
   const timers = new Map<string, ReturnType<typeof setTimeout>>();
   const schedule = (doc: vscode.TextDocument): void => {
