@@ -54,7 +54,7 @@ test('hovering a property inside a condition returns detail + doc', () => {
 test('a since/units property inside a condition carries its notes', () => {
   const r = hover('(condition "A.Pad_To_Die_D|elay > 0")');
   assert.ok(r, 'hover result for Pad_To_Die_Delay');
-  assert.match(r.contents, /Since KiCad 9/i);
+  assert.match(r.contents, /Since KiCad 10/i); // not registered at the 9.0.0 tag
   assert.match(r.contents, /ps/, 'units appear in the detail');
 });
 

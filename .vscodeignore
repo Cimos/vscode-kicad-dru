@@ -29,6 +29,10 @@ vsc-extension-quickstart.md
 **/eslint.config.*
 
 node_modules/**
+
+# data/api.json is bundled into dist/extension.js (and dist/web/extension.js)
+# at build time; the raw file is only read by the unit tests.
+data/**
 *.vsix
 package-lock.json
 

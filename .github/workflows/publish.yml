@@ -9,10 +9,17 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # Least privilege: the only write this job needs is creating/attaching the
-    # GitHub release. Marketplace / Open VSX auth is via PATs, not GITHUB_TOKEN.
+    # The `publish` environment only admits v* tags (repo Settings →
+    # Environments). Open VSX trusted publishing is registered against this
+    # workflow file AND this environment, so a run on any other ref can't
+    # mint a publish token. Side effect: manual runs from a branch are blocked.
+    environment: publish
+    # Least privilege: `contents: write` to create/attach the GitHub release;
+    # `id-token: write` lets ovsx request a short-lived OIDC token for Open VSX
+    # trusted publishing (no long-lived secret). Marketplace still uses a PAT.
     permissions:
       contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -44,6 +51,17 @@ jobs:
           name: vsix
           path: vscode-kicad-dru.vsix
 
+      # Attach first: the GitHub release is the channel that always works, so a
+      # store failure below must not keep it from going out.
+      - name: Attach .vsix to GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        # SHA-pinned (supply-chain hygiene): third-party action pinned to the
+        # exact commit behind the v2 tag. A v3 line exists — bump deliberately
+        # after reviewing its changelog, not implicitly via a moving tag.
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          files: vscode-kicad-dru.vsix
+
       # Step-level env (least privilege) isn't visible to a step's own `if`,
       # so the secret-present check lives in the shell, where it is. Skips
       # cleanly when the PAT is absent; publishes when it's set.
@@ -58,22 +76,23 @@ jobs:
           fi
           npx --yes @vscode/vsce publish --packagePath vscode-kicad-dru.vsix --pat "$VSCE_PAT"
 
+      # Open VSX. Two modes:
+      #  - OVSX_PAT set: one-time bootstrap. Open VSX requires the FIRST version
+      #    of an extension to be published with a token (trusted publishing can
+      #    only be registered for an extension that already exists). Creates the
+      #    `cimos` namespace if missing. Delete the secret afterwards — a PAT
+      #    always takes precedence over trusted publishing.
+      #  - no OVSX_PAT: trusted publishing via GitHub OIDC (id-token: write),
+      #    registered on open-vsx.org for Cimos/vscode-kicad-dru, publish.yml,
+      #    environment `publish`. Fails loudly if no OIDC token can be minted.
       - name: Publish to Open VSX
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
         run: |
-          if [ -z "$OVSX_PAT" ]; then
-            echo "OVSX_PAT not set — skipping Open VSX publish."
-            exit 0
+          if [ -n "$OVSX_PAT" ]; then
+            npx --yes ovsx create-namespace cimos -p "$OVSX_PAT" || echo "Namespace 'cimos' already exists (or could not be created) — continuing."
+            npx --yes ovsx publish vscode-kicad-dru.vsix -p "$OVSX_PAT"
+          else
+            npx --yes ovsx publish vscode-kicad-dru.vsix --trusted-publishing
           fi
-          npx --yes ovsx publish vscode-kicad-dru.vsix -p "$OVSX_PAT"
-
-      - name: Attach .vsix to GitHub release
-        if: startsWith(github.ref, 'refs/tags/v')
-        # SHA-pinned (supply-chain hygiene): third-party action pinned to the
-        # exact commit behind the v2 tag. A v3 line exists — bump deliberately
-        # after reviewing its changelog, not implicitly via a moving tag.
-        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
-        with:
-          files: vscode-kicad-dru.vsix

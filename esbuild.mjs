@@ -4,6 +4,7 @@ const prod = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
 
 // The shipped extension bundle: CommonJS, `vscode` external, `main` target.
+// data/api.json is inlined by the import in src/extension.ts.
 const extensionOpts = {
   entryPoints: ['src/extension.ts'],
   bundle: true,
@@ -15,6 +16,15 @@ const extensionOpts = {
   sourcemap: !prod,
   minify: prod,
   logLevel: 'info',
+};
+
+// The same source built for the web extension host (vscode.dev, github.dev):
+// package.json `browser` points here. No Node built-ins may be used.
+const webOpts = {
+  ...extensionOpts,
+  outfile: 'dist/web/extension.js',
+  platform: 'browser',
+  target: 'es2020',
 };
 
 // A pure-logic ESM build of the completion engine so `node --test` can import
@@ -67,7 +77,21 @@ const ratingOpts = {
   outfile: 'dist/rating.mjs',
 };
 
-const allOpts = [extensionOpts, pureOpts, hoverOpts, foldingOpts, parserOpts, diagnosticsOpts, ratingOpts];
+const symbolsOpts = { ...pureOpts, entryPoints: ['src/symbols.ts'], outfile: 'dist/symbols.mjs' };
+const formatOpts = { ...pureOpts, entryPoints: ['src/format.ts'], outfile: 'dist/format.mjs' };
+
+const allOpts = [
+  extensionOpts,
+  webOpts,
+  pureOpts,
+  hoverOpts,
+  foldingOpts,
+  parserOpts,
+  diagnosticsOpts,
+  ratingOpts,
+  symbolsOpts,
+  formatOpts,
+];
 
 if (watch) {
   const contexts = await Promise.all(allOpts.map((o) => esbuild.context(o)));

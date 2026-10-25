@@ -58,9 +58,17 @@ export interface ParseError {
   message: string;
   range: Range;
 }
+export interface Comment {
+  /** 0-based line of the comment. */
+  line: number;
+  /** The comment text from `#` to end of line, trailing whitespace trimmed. */
+  text: string;
+}
 export interface ParseResult {
   ast: Node[];
   errors: ParseError[];
+  /** Line-start `#` comments, in document order (consumed by the formatter). */
+  comments: Comment[];
 }
 
 const span = (line: number, start: number, end: number): Range => ({
@@ -71,6 +79,7 @@ const span = (line: number, start: number, end: number): Range => ({
 export function parse(text: string): ParseResult {
   const errors: ParseError[] = [];
   const ast: Node[] = [];
+  const comments: Comment[] = [];
   const stack: ListNode[] = [];
   const push = (n: Node): void => {
     if (stack.length) stack[stack.length - 1].children.push(n);
@@ -81,7 +90,10 @@ export function parse(text: string): ParseResult {
   for (let line = 0; line < lines.length; line++) {
     let s = lines[line];
     if (s.endsWith('\r')) s = s.slice(0, -1);
-    if (/^\s*#/.test(s)) continue; // line-start-only comment
+    if (/^\s*#/.test(s)) {
+      comments.push({ line, text: s.trim() }); // line-start-only comment
+      continue;
+    }
 
     let col = 0;
     while (col < s.length) {
@@ -155,5 +167,5 @@ export function parse(text: string): ParseResult {
     errors.push({ code: 'unclosed-paren', message: 'Unclosed parenthesis.', range: open.open });
   }
 
-  return { ast, errors };
+  return { ast, errors, comments };
 }
