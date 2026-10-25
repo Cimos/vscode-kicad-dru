@@ -6,6 +6,8 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-25
+
 - A one-off "rate this extension" toast, shown only after five sessions
   with a `.kicad_dru` file open and at least three days of use. "Later"
   snoozes it for 30 days; "Don't ask again" (synced across machines) or
