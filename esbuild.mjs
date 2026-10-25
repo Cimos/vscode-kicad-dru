@@ -61,7 +61,13 @@ const diagnosticsOpts = {
   outfile: 'dist/diagnostics.mjs',
 };
 
-const allOpts = [extensionOpts, pureOpts, hoverOpts, foldingOpts, parserOpts, diagnosticsOpts];
+const ratingOpts = {
+  ...pureOpts,
+  entryPoints: ['src/rating.ts'],
+  outfile: 'dist/rating.mjs',
+};
+
+const allOpts = [extensionOpts, pureOpts, hoverOpts, foldingOpts, parserOpts, diagnosticsOpts, ratingOpts];
 
 if (watch) {
   const contexts = await Promise.all(allOpts.map((o) => esbuild.context(o)));

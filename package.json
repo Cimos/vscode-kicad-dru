@@ -80,6 +80,13 @@
         "path": "./snippets/kicad-dru.json"
       }
     ],
+    "commands": [
+      {
+        "command": "kicad-dru.rate",
+        "title": "Rate this extension",
+        "category": "KiCad DRU"
+      }
+    ],
     "configuration": {
       "title": "KiCad Custom Design Rules",
       "properties": {
