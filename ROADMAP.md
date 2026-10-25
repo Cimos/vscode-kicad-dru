@@ -12,6 +12,7 @@ Legend: ✅ done · 🔜 next · 📋 later · ♻ ongoing
 | v0.0.1 | TextMate grammar, 47 snippets, language configuration | ✅ |
 | v0.0.2 | Snapshot test harness; CI test-gate; publish-CI hardening; KiCad 10 retarget; icon-only package; shipped via GitHub Releases | ✅ |
 | v0.1.0 | IntelliSense completion (expression + structural + bound + value-literal) and hover help; activated esbuild extension — GitHub issue #1 | ✅ |
+| v0.1.1 | Minimap/folding fix: paren-matching FoldingRangeProvider replaces the `(`/`)` folding markers that rendered as minimap section headers | ✅ |
 | v0.1.x | Wider hover / completion coverage; polish | 📋 |
 | v0.2+ | Diagnostics / semantic validation of rule well-formedness (possibly LSP) | 📋 |
 | — | Marketplace + Open VSX distribution (blocked on Azure DevOps PAT) | 📋 |
