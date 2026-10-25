@@ -79,6 +79,22 @@
         "language": "kicad-dru",
         "path": "./snippets/kicad-dru.json"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "KiCad Custom Design Rules",
+      "properties": {
+        "kicad-dru.diagnostics": {
+          "type": "string",
+          "enum": ["off", "errors", "all"],
+          "enumDescriptions": [
+            "No diagnostics.",
+            "Structural errors only (unbalanced parens, unknown constraint types, bad enum values, units on unitless constraints).",
+            "Errors plus warnings."
+          ],
+          "default": "all",
+          "description": "Diagnostics for .kicad_dru files. Only definite mistakes are flagged; KiCad's Check Rule Syntax remains the authority."
+        }
+      }
+    }
   }
 }

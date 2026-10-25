@@ -6,6 +6,7 @@
 .github/**
 .claude/**
 agent-context/**
+docs/**
 tests/**
 test/**
 src/**
