@@ -33,10 +33,12 @@ string literals. This extension adds that for `.kicad_dru` specifically.
 - **IntelliSense completion**. Inside `(condition "…")` /
   `(constraint assertion "…")` strings: a receiver and `.` (`A.`, `B.`,
   `AB.`) gets its properties, an identifier boundary gets receivers and
-  functions. While writing the rule structure: after `(constraint ` you get
-  constraint types, after `(layer ` layer names, after `(severity `
-  severities, after `(constraint disallow ` the categories. Each item shows
-  its type/units or argument shape and a short doc.
+  functions; inside `A.Type == '…'` the item types, and inside
+  `A.Layer == '…'` / `existsOnLayer('…')` the layer names. While writing the
+  rule structure: after `(constraint ` you get constraint types, after
+  `(layer ` layer names (both `F.SilkS` and `F.Silkscreen` styles), after
+  `(severity ` severities, after `(constraint disallow ` the categories. Each
+  item shows its type/units or argument shape and a short doc.
 - **Hover help**. Hover a constraint type, property, function, layer,
   severity, or disallow category to see what it is, its argument/type, and a
   one-line description.
@@ -52,6 +54,8 @@ string literals. This extension adds that for `.kicad_dru` specifically.
   clause per line under each rule, consistent indentation, comments kept in
   place. String contents are never touched, and a file with a syntax error is
   left as-is.
+- **Regions**. Wrap related rules in `# region Power` … `# endregion` to
+  fold them as a block; the label shows as a section header in the minimap.
 - **Editor niceties**: `#` line comment toggling, paren matching, folding
   on each multi-line `( … )` block, auto-closing pairs.
 - **Works in the browser**: vscode.dev and github.dev, not just desktop.
@@ -113,6 +117,17 @@ and re-run *Check Rule Syntax*.
 Pull requests are welcome — especially for grammar gaps you hit on a real
 rule file. Please attach a minimal `.kicad_dru` snippet that demonstrates
 the issue.
+
+```
+npm ci
+npm test                  # grammar snapshots + assertion cases + unit tests
+npm run test:integration  # launches a real VS Code with only this extension
+```
+
+All language logic lives in plain, `vscode`-free modules under `src/`
+(completion, hover, diagnostics, symbols, format, folding), driven by
+`data/api.json`; `src/extension.ts` only adapts them to VS Code. CI runs both
+suites on every pull request.
 
 Issues: <https://github.com/Cimos/vscode-kicad-dru/issues>
 

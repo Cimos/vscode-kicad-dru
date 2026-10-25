@@ -97,15 +97,11 @@ const names = (list: ApiVocab[] | undefined): Set<string> => new Set((list ?? []
 const LAYER_RANGE = /^(?:In(?:[1-9]|[12]\d|30)\.Cu|User\.(?:[1-9]|[1-3]\d|4[0-5]))$/;
 
 /**
- * Standard (non-canonical) layer names KiCad 10.0.0 also accepts in a
- * `(layer …)` clause — the enum map carries both forms
- * (pcb_edit_frame.cpp:1885-1891; layer_id.cpp:43-62) — plus the `Rescue`
- * sentinel (lset.cpp:223). Not offered by completion, only never flagged.
+ * Layer names KiCad 10.0.0 accepts that are deliberately NOT in `api.layers`
+ * (so completion doesn't offer them): the `Rescue` sentinel (lset.cpp:223).
+ * The standard names (`F.Silkscreen`, `User.Drawings`, …) live in api.json.
  */
-const LAYER_ALIASES = new Set([
-  'F.Silkscreen', 'B.Silkscreen', 'F.Adhesive', 'B.Adhesive', 'F.Courtyard', 'B.Courtyard',
-  'User.Drawings', 'User.Comments', 'User.Eco1', 'User.Eco2', 'Rescue',
-]);
+const LAYER_ALIASES = new Set(['Rescue']);
 
 /** Properties KiCad special-cases for `A`/`B` only; on `AB` they are "Unrecognized item" (pcbexpr_evaluator.cpp:559-596). */
 const AB_UNSUPPORTED = new Set(['type', 'netclass', 'netname', 'componentclass']);

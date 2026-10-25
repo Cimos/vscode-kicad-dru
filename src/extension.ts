@@ -85,7 +85,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.languages.registerFoldingRangeProvider(selector, {
       provideFoldingRanges(document) {
         return computeFoldingRanges(document.getText()).map(
-          (r) => new vscode.FoldingRange(r.start, r.end),
+          (r) => new vscode.FoldingRange(r.start, r.end, r.kind === 'region' ? vscode.FoldingRangeKind.Region : undefined),
         );
       },
     }),

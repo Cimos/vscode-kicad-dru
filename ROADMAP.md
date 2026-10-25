@@ -1,7 +1,8 @@
 # Roadmap
 
-Status as of 2026-10-25: **v0.3.0 shipped** via GitHub Releases, the VS Code
-Marketplace (manual upload) and Open VSX. The extension
+Status as of 2026-10-26: **v0.4.0 shipped** via GitHub Releases and the VS
+Code Marketplace (manual upload); Open VSX publishing is automated and the
+listing goes public once the `cimos` namespace claim is approved. The extension
 highlights `.kicad_dru` files for KiCad 10 stable (grammar also covers KiCad 11
 / master tokens), ships 47 snippets, offers completion + hover from a single
 audited `data/api.json`, flags definite mistakes as diagnostics, and has a
@@ -18,21 +19,23 @@ Legend: ✅ done · 🔜 next · 📋 later · ♻ ongoing
 | v0.2.0 | Diagnostics: structural errors (parens, version header, unknown keywords / constraint types, bad enums, units on unitless) + vocabulary warnings (unknown properties / functions, deprecated aliases, non-canonical layers, master-only tokens); `kicad-dru.diagnostics` setting | ✅ |
 | v0.2.1 | Rating toast | ✅ |
 | v0.3.0 | Quick fixes + typo suggestions; Outline / Go to Symbol; Format Document; browser support (vscode.dev); more parser-verified diagnostics; `data/api.json` re-audited against the KiCad 10.0.0 source; Open VSX via trusted publishing | ✅ |
-| v0.3.x | Wider hover / completion coverage; `# region` minimap headers; polish | 📋 |
+| v0.4.0 | `# region` folding + minimap headers; layer completion in `A.Layer == '…'`; standard layer names offered; real-VS Code integration tests in CI | ✅ |
+| v0.4.x | Polish driven by user reports; confirm the literal `solder_paste_rel_margin` expects (needs a KiCad 10 Check Rule Syntax run) | 📋 |
+| — | Open VSX listing public (pending the `cimos` namespace claim; publishing itself is automated) | 🔜 |
 | — | Marketplace CI publishing (blocked on Azure DevOps PAT; manual upload works) | 📋 |
-| — | Minor grammar polish; tag deprecated `inside*` / `memberOf` functions | 📋 |
 | — | Re-audit the DRU language on each KiCad release (KiCad 11 in dev) | ♻ |
 
 ## Where we are
 
-v0.3.0 is shipped. Completion, hover, diagnostics (with quick fixes),
+v0.4.0 is shipped. Completion, hover, diagnostics (with quick fixes),
 outline, formatter and folding are all pure, unit-tested modules driven by
 `data/api.json` (re-audited against the KiCad 10.0.0 source on 2026-10-25);
 `src/extension.ts` is the only `vscode`-coupled file and builds for both
 desktop and the web. The grammar stays locked by CI snapshot + assertion
 tests; corpus guards assert every fixture and snippet is diagnostic-free and
-that formatting preserves the parse tree.
-Next is v0.3.x polish.
+that formatting preserves the parse tree; an integration suite drives every
+provider through a real VS Code in CI.
+Next is v0.4.x polish, led by user reports.
 
 ## v0.1.0 — completion provider (the next jump)
 

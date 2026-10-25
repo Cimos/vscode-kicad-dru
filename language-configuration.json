@@ -15,7 +15,17 @@
     "surroundingPairs": [
         ["(", ")"],
         ["\"", "\""],
-    ]
-    // No "folding.markers": paren folding is a FoldingRangeProvider
-    // (src/folding.ts). Markers are rendered as minimap section headers.
+    ],
+    // Paren folding is a FoldingRangeProvider (src/folding.ts), which also
+    // folds these regions. The markers exist so VS Code shows the text after
+    // `# region` as a minimap section header. They MUST only match comment
+    // lines: markers are rendered as headers, which is why the old `\(` start
+    // marker put a label on nearly every line. Keep in sync with
+    // REGION_START / REGION_END in src/folding.ts.
+    "folding": {
+        "markers": {
+            "start": "^\\s*#\\s*region\\b",
+            "end": "^\\s*#\\s*endregion\\b"
+        }
+    }
 }
