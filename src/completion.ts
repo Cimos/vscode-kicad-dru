@@ -606,7 +606,9 @@ export function valueLiteralContext(
   const before = lineText.slice(bodyOpen + 1, litOpen);
   // (a) `A.Type == '` / `A.Type != '` (property-on-left idiom only).
   if (/\.\s*Type\s*(==|!=)\s*$/.test(before)) return 'type';
-  // (b) `existsOnLayer('` — the only function whose single arg is a layer name.
+  // (b) `A.Layer == '` / `!= '` and `existsOnLayer('` — layer-name literals.
+  // (Renamed layers are valid here too; we can only offer the known names.)
+  if (/\.\s*Layer\s*(==|!=)\s*$/i.test(before)) return 'layer';
   if (/\bexistsOnLayer\s*\(\s*$/.test(before)) return 'layer';
   return null;
 }

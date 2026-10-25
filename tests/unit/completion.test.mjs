@@ -102,9 +102,10 @@ test('outside any expression body, non-structural positions return []', () => {
   // structural.test.mjs. It is no longer an empty-result case.
 });
 
-test('inside an inner \'...\' literal returns []', () => {
-  // cursor inside the single-quoted layer-name literal
-  assert.deepEqual(complete("(condition \"A.Layer == 'F|'\");"), []);
+test('inside a freehand inner \'...\' literal returns []', () => {
+  // cursor inside a net-name literal: no canonical list, so nothing offered
+  // (A.Layer / A.Type / existsOnLayer literals DO offer values — see below)
+  assert.deepEqual(complete("(condition \"A.NetName == 'G|'\");"), []);
 });
 
 // ---- value-literal completion (inside an inner '...' in known contexts) ----
@@ -146,6 +147,18 @@ test('value completion replace range covers the typed partial', () => {
   assert.ok(entries.length > 0, 'value entries offered');
   // 'Pa' is a 2-char partial inside the quotes
   assert.equal(entries[0].replace.end - entries[0].replace.start, 2);
+});
+
+test("A.Layer == ' offers layer names, including the standard ones", () => {
+  const ls = labels(complete("(condition \"A.Layer == '|'\");"));
+  for (const v of ['F.Cu', 'B.Mask', 'F.Silkscreen', 'User.Drawings']) assert.ok(ls.includes(v), v);
+  assert.ok(!ls.includes('outer'), 'layer-set shortcuts are not layer names');
+  assert.ok(labels(complete("(condition \"B.layer != 'F|'\");")).includes('F.Cu'), 'case-insensitive property, != too');
+});
+
+test('(layer offers the standard names too', () => {
+  const ls = labels(complete('  (layer |'));
+  assert.ok(ls.includes('F.Silkscreen') && ls.includes('F.SilkS') && ls.includes('outer'));
 });
 
 test('value replace range spans a partial containing a space (Text Box)', () => {

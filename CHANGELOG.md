@@ -6,6 +6,19 @@ this extension adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-26
+
+- **Regions.** `# region <label>` … `# endregion` comment lines fold as a
+  block and the label appears as a minimap section header (`#region` also
+  works; regions nest).
+- **Layer completion in conditions.** Inside `A.Layer == '…'` (and `!=`),
+  layer names are offered, like `existsOnLayer('…')` already did.
+- **Standard layer names** (`F.Silkscreen`, `B.Courtyard`, `User.Drawings`,
+  …) are now offered by completion and documented on hover, alongside the
+  abbreviated `F.SilkS` style. Both are valid in KiCad 10.
+- Real-VS Code integration tests (`npm run test:integration`) now run in CI
+  on every pull request, alongside the grammar and unit tests.
+
 ## [0.3.0] - 2026-10-25
 
 - **Quick fixes.** Diagnostics now suggest the intended word for typos as

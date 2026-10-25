@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   test:
+    name: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,3 +23,28 @@ jobs:
 
       - name: Grammar snapshot tests
         run: npm test
+
+  # Launches a real VS Code (stable) with only this extension and drives every
+  # provider through VS Code's command layer (tests/integration/suite.js).
+  # Catches registration / activation / manifest failures the pure unit tests
+  # can't see. Linux runners are headless, hence xvfb.
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Cache VS Code download
+        uses: actions/cache@v4
+        with:
+          path: .vscode-test
+          key: vscode-test-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: vscode-test-${{ runner.os }}-
+
+      - name: Integration tests (real VS Code)
+        run: xvfb-run -a npm run test:integration

@@ -1,0 +1,14 @@
+(version 1)
+
+# region Clearances
+(rule "typo constraint" (constraint clearence (min 0.2mm)))
+
+(rule "typo property" (condition "A.Widht > 0.2mm") (constraint track_width (min 0.1mm)))
+# endregion
+
+(rule "unit on unitless" (constraint track_angle (min 90deg)))
+
+(rule "clean"
+  (layer F.Silkscreen)
+  (constraint solder_paste_rel_margin (opt -0.1mm))
+  (condition "A.Type == 'Reference Image'"))

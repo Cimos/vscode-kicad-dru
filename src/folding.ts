@@ -17,14 +17,37 @@
  */
 
 export interface FoldRange {
-  /** 0-based line of the opening paren. */
+  /** 0-based line of the opening paren (or `# region` comment). */
   start: number;
-  /** 0-based line of the closing paren. */
+  /** 0-based line of the closing paren (or `# endregion` comment). */
   end: number;
+  /** `region` for a `# region` … `# endregion` block; absent for parens. */
+  kind?: 'region';
 }
+
+/**
+ * `# region <label>` / `# endregion` comment markers (also `#region`). The same
+ * two patterns are the `folding.markers` in language-configuration.json, which
+ * VS Code uses to draw the label as a minimap section header. They only match
+ * comment lines, so — unlike the old `\(` markers — ordinary rules never become
+ * headers.
+ */
+export const REGION_START = /^\s*#\s*region\b/;
+export const REGION_END = /^\s*#\s*endregion\b/;
 
 export function computeFoldingRanges(text: string): FoldRange[] {
   const ranges: FoldRange[] = [];
+
+  // Region markers are whole comment lines; unmatched ones are ignored.
+  const regions: number[] = [];
+  text.split('\n').forEach((l, n) => {
+    if (REGION_START.test(l)) regions.push(n);
+    else if (REGION_END.test(l)) {
+      const start = regions.pop();
+      if (start !== undefined && n > start) ranges.push({ start, end: n, kind: 'region' });
+    }
+  });
+
   const open: number[] = []; // line numbers of unmatched '('
   let line = 0;
   let inString = false;
