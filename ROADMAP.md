@@ -1,9 +1,10 @@
 # Roadmap
 
-Status as of 2026-06-21: **v0.0.2 shipped** via GitHub Releases. The extension
+Status as of 2026-10-25: **v0.2.0 shipped** via GitHub Releases. The extension
 highlights `.kicad_dru` files for KiCad 10 stable (grammar also covers KiCad 11
-/ master tokens), ships 47 snippets, and has a CI-gated grammar snapshot test
-suite.
+/ master tokens), ships 47 snippets, offers completion + hover from a single
+audited `data/api.json`, flags definite mistakes as diagnostics, and has a
+CI-gated grammar snapshot + unit test suite.
 
 Legend: ✅ done · 🔜 next · 📋 later · ♻ ongoing
 
@@ -13,8 +14,8 @@ Legend: ✅ done · 🔜 next · 📋 later · ♻ ongoing
 | v0.0.2 | Snapshot test harness; CI test-gate; publish-CI hardening; KiCad 10 retarget; icon-only package; shipped via GitHub Releases | ✅ |
 | v0.1.0 | IntelliSense completion (expression + structural + bound + value-literal) and hover help; activated esbuild extension — GitHub issue #1 | ✅ |
 | v0.1.1 | Minimap/folding fix: paren-matching FoldingRangeProvider replaces the `(`/`)` folding markers that rendered as minimap section headers | ✅ |
-| v0.1.x | Wider hover / completion coverage; polish | 📋 |
-| v0.2+ | Diagnostics / semantic validation of rule well-formedness (possibly LSP) | 📋 |
+| v0.2.0 | Diagnostics: structural errors (parens, version header, unknown keywords / constraint types, bad enums, units on unitless) + vocabulary warnings (unknown properties / functions, deprecated aliases, non-canonical layers, master-only tokens); `kicad-dru.diagnostics` setting | ✅ |
+| v0.2.x | Wider hover / completion coverage; quick-fixes for case-hint diagnostics; `# region` minimap headers; polish | 📋 |
 | — | Marketplace + Open VSX distribution (blocked on Azure DevOps PAT) | 📋 |
 | — | Re-audit the language/property reference against the KiCad 10.0.0 source | 📋 |
 | — | Minor grammar polish; tag deprecated `inside*` / `memberOf` functions | 📋 |
@@ -22,11 +23,11 @@ Legend: ✅ done · 🔜 next · 📋 later · ♻ ongoing
 
 ## Where we are
 
-v0.1.0 — completion + hover — is built, reviewed, and being released. The
-static highlighter is now an activated, esbuild-bundled extension whose
-completion/hover logic is pure, unit-tested, and data-driven from
-`data/api.json`; the grammar stays locked by CI snapshot + assertion tests.
-Next is v0.2+ diagnostics / semantic validation.
+v0.2.0 — diagnostics — is shipped. Completion, hover and diagnostics are all
+pure, unit-tested modules driven by `data/api.json`; `src/extension.ts` is the
+only `vscode`-coupled file; the grammar stays locked by CI snapshot + assertion
+tests, and a corpus guard asserts every fixture and snippet is diagnostic-free.
+Next is v0.2.x polish and the Marketplace / Open VSX unblock.
 
 ## v0.1.0 — completion provider (the next jump)
 
