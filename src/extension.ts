@@ -10,6 +10,7 @@ import {
   type EntryKind,
 } from './completion';
 import { computeHover } from './hover';
+import { computeFoldingRanges } from './folding';
 
 /**
  * Extension entry point. The only `vscode`-coupled file.
@@ -57,6 +58,18 @@ function loadApi(context: vscode.ExtensionContext): { api: CompletionApi; data: 
 }
 
 export function activate(context: vscode.ExtensionContext): void {
+  // Folding needs no data payload, so register it before the fail-soft
+  // api.json load below. Pure logic lives in `computeFoldingRanges`.
+  context.subscriptions.push(
+    vscode.languages.registerFoldingRangeProvider({ language: 'kicad-dru' }, {
+      provideFoldingRanges(document) {
+        return computeFoldingRanges(document.getText()).map(
+          (r) => new vscode.FoldingRange(r.start, r.end),
+        );
+      },
+    }),
+  );
+
   let api: CompletionApi;
   let data: ApiData;
   try {

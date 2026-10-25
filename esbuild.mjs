@@ -41,15 +41,24 @@ const hoverOpts = {
   outfile: 'dist/hover.mjs',
 };
 
+// Pure-logic ESM build of the folding engine, same rationale as `pureOpts`.
+const foldingOpts = {
+  ...pureOpts,
+  entryPoints: ['src/folding.ts'],
+  outfile: 'dist/folding.mjs',
+};
+
 if (watch) {
   const c1 = await esbuild.context(extensionOpts);
   const c2 = await esbuild.context(pureOpts);
   const c3 = await esbuild.context(hoverOpts);
-  await Promise.all([c1.watch(), c2.watch(), c3.watch()]);
+  const c4 = await esbuild.context(foldingOpts);
+  await Promise.all([c1.watch(), c2.watch(), c3.watch(), c4.watch()]);
 } else {
   await Promise.all([
     esbuild.build(extensionOpts),
     esbuild.build(pureOpts),
     esbuild.build(hoverOpts),
+    esbuild.build(foldingOpts),
   ]);
 }

@@ -1,0 +1,69 @@
+// Unit tests for paren-based folding (src/folding.ts).
+// Runs under plain `node --test`; imports the esbuild ESM bundle
+// (dist/folding.mjs). Prereq: `npm run compile`.
+
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+
+import { computeFoldingRanges } from '../../dist/folding.mjs';
+
+const fold = (lines) => computeFoldingRanges(lines.join('\n'));
+
+test('one range per multi-line rule', () => {
+  const r = fold([
+    '(version 1)',
+    '(rule "Via Size"',
+    '  (constraint via_diameter (min 0.5mm))',
+    '  (condition "A.Type == \'Via\'"))',
+  ]);
+  assert.deepEqual(r, [{ start: 1, end: 3 }]);
+});
+
+test('single-line pairs produce no ranges', () => {
+  assert.deepEqual(fold(['(version 1)', '(rule "x" (constraint clearance (min 1mm)))']), []);
+});
+
+test('nested multi-line pairs fold independently', () => {
+  const r = fold([
+    '(rule "x"',
+    '  (constraint clearance',
+    '    (min 1mm))',
+    '  (condition "A.Type == \'Pad\'"))',
+  ]);
+  assert.deepEqual(r, [
+    { start: 1, end: 2 },
+    { start: 0, end: 3 },
+  ]);
+});
+
+test('parens inside double-quoted strings are ignored', () => {
+  const r = fold([
+    '(rule "a (b"',
+    '  (condition "A.intersectsArea(\'Z\') && (B.Type == \'Pad\'"))',
+  ]);
+  assert.deepEqual(r, [{ start: 0, end: 1 }]);
+});
+
+test('parens inside # comments are ignored', () => {
+  const r = fold([
+    '# see (https://example.com',
+    '(rule "x"   # trailing ) comment',
+    '  (constraint clearance (min 1mm)))',
+  ]);
+  assert.deepEqual(r, [{ start: 1, end: 2 }]);
+});
+
+test('# inside a string is not a comment', () => {
+  const r = fold(['(rule "#1"', '  (constraint clearance (min 1mm)))']);
+  assert.deepEqual(r, [{ start: 0, end: 1 }]);
+});
+
+test('unbalanced input does not throw', () => {
+  assert.deepEqual(fold(['(rule "x"', '  (constraint clearance']), []);
+  assert.deepEqual(fold([')))', '(rule "x"', ')']), [{ start: 1, end: 2 }]);
+});
+
+test('CRLF line endings count lines correctly', () => {
+  const r = computeFoldingRanges('(version 1)\r\n(rule "x"\r\n  (constraint clearance (min 1mm)))\r\n');
+  assert.deepEqual(r, [{ start: 1, end: 2 }]);
+});
